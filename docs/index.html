@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<!-- (c) Brian Jenkins | MIT licensed -->
+
+<html lang="en">
+<head>
+	<!-- Metadata -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="" />
+
+	<!-- Title -->
+	<title>damned</title>
+
+	<!-- Thumbnails -->
+	<link rel="shortcut icon" href="images/favicon.png" />
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.icns" />
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="css/lib/xterm.css" />
+
+	<!-- Inline Stylesheet -->
+	<style>
+		*, *:before, *:after {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+		html, body, #terminal {
+			height: 100%;
+		}
+		body {
+			background-size: cover;
+			padding: 1rem;
+		}
+	</style>
+
+</head>
+<body>
+
+	<!-- Terminal -->
+	<div id="terminal"></div>
+
+	<!-- Libraries -->
+	<script src="js/lib/fit.js"></script>
+	<script src="js/lib/xterm.js"></script>
+
+	<!-- Scripts -->
+	<script src="js/main.js"></script>
+
+	<!-- Inline Script -->
+	<script>
+
+		document.body.style.backgroundImage = "url(\"https://source.unsplash.com/random/" + (screen.width * window.devicePixelRatio) + "x" + (screen.height * window.devicePixelRatio) + "\")";
+
+	</script>
+
+</body>
+</html>
