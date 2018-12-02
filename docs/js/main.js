@@ -2,6 +2,8 @@
 
 let term;
 
+System.import("/js/damned.js");
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	Terminal.applyAddon(fit);

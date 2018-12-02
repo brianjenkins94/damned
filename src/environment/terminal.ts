@@ -22,7 +22,7 @@ class Terminal extends EventEmitter {
 			this.emit("key", key);
 		});
 
-		// Event would not trigger on `this.output`
+		// WORKAROUND: `resize` event would not trigger on `this.output`
 		process.stdout.on("resize", () => {
 			this.emit("resize");
 		});
@@ -55,4 +55,4 @@ class Terminal extends EventEmitter {
 	}
 }
 
-export = new Terminal();
+export { Terminal };
