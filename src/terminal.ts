@@ -12,9 +12,8 @@ class Terminal extends EventEmitter {
 	public columns = this.output.columns;
 
 	// <Initialization>
-	private static instance = new Terminal();
 
-	private constructor() {
+	public constructor() {
 		super();
 
 		this.input.setRawMode(true);
@@ -29,9 +28,6 @@ class Terminal extends EventEmitter {
 		});
 	}
 
-	public static getInstance() {
-		return this.instance;
-	}
 	// </Initialization>
 
 	public clearLine(direction) {
@@ -59,4 +55,4 @@ class Terminal extends EventEmitter {
 	}
 }
 
-export = Terminal.getInstance();
+export = new Terminal();

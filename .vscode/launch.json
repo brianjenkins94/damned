@@ -19,7 +19,7 @@
                 "${workspaceRoot}/node_modules/**/*.js",
                 "<node_internals>/**/*.js"
             ],
-            "console": "externalTerminal"
+            "console": "integratedTerminal"
         }
     ]
 }
