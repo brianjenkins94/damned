@@ -1,6 +1,5 @@
 import { EventEmitter } from "events";
 
-// BUG: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30818
 // WORKAROUND: Using `require` to avoid incorrect type definition.
 let tty = require("tty");
 
@@ -22,7 +21,7 @@ class Terminal extends EventEmitter {
 			this.emit("key", key);
 		});
 
-		// WORKAROUND: `resize` event would not trigger on `this.output`
+		// WORKAROUND: The `resize` event would not trigger on `this.output`.
 		process.stdout.on("resize", () => {
 			this.emit("resize");
 		});

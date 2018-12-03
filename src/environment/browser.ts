@@ -1,4 +1,4 @@
-// WORKAROUND: Couldn't get `xterm` to resolve correctly.
+// WORKAROUND: Couldn't get `xterm` to resolve its type definitions correctly.
 declare let term: any;
 
 import { EventEmitter } from "events";

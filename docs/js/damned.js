@@ -84,7 +84,6 @@ System.register("environment/terminal", ["events"], function (exports_2, context
             }
         ],
         execute: function () {
-            // BUG: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30818
             // WORKAROUND: Using `require` to avoid incorrect type definition.
             tty = require("tty");
             Terminal = class Terminal extends events_2.EventEmitter {
@@ -99,7 +98,7 @@ System.register("environment/terminal", ["events"], function (exports_2, context
                     this.input.on("data", (key) => {
                         this.emit("key", key);
                     });
-                    // WORKAROUND: `resize` event would not trigger on `this.output`
+                    // WORKAROUND: The `resize` event would not trigger on `this.output`.
                     process.stdout.on("resize", () => {
                         this.emit("resize");
                     });
@@ -128,7 +127,7 @@ System.register("environment/terminal", ["events"], function (exports_2, context
         }
     };
 });
-System.register("index", ["environment/browser", "environment/terminal"], function (exports_3, context_3) {
+System.register("environment/index", ["environment/browser", "environment/terminal"], function (exports_3, context_3) {
     "use strict";
     var browser_1, terminal_1, environment;
     var __moduleName = context_3 && context_3.id;
@@ -143,12 +142,28 @@ System.register("index", ["environment/browser", "environment/terminal"], functi
         ],
         execute: function () {
             if (typeof (process) !== "undefined") {
-                environment = new terminal_1.Terminal();
+                exports_3("environment", environment = new terminal_1.Terminal());
             }
             else {
-                environment = new browser_1.Browser();
+                exports_3("environment", environment = new browser_1.Browser());
             }
-            console.log("hello!");
+        }
+    };
+});
+System.register("index", ["environment/index"], function (exports_4, context_4) {
+    "use strict";
+    var environment_1;
+    var __moduleName = context_4 && context_4.id;
+    return {
+        setters: [
+            function (environment_1_1) {
+                environment_1 = environment_1_1;
+            }
+        ],
+        execute: function () {
+            environment_1.environment.on("key", function (data) {
+                environment_1.environment.write("We heard a thing!");
+            });
         }
     };
 });
