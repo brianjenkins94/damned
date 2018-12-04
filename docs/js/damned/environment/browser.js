@@ -883,4 +883,4 @@ let Terminal = class Browser extends EventEmitter {
     }
 };
 
-export { Terminal };
+export default Terminal;

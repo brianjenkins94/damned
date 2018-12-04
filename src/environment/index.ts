@@ -6,11 +6,6 @@ if (typeof(process) !== "undefined") {
 	environment = "./environment/browser.js";
 }
 
-let terminalInstance = import(environment).then(function({ Terminal }) {
-	return new Terminal();
-});
-
-console.log("From environment/index: ");
-console.log(terminalInstance);
-
-export { terminalInstance };
+export default (async function() {
+	return new (await import(environment)).default();
+})();
