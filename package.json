@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "An ungodly resurrection of chjj's blessed.",
   "scripts": {
-	"start": "ts-node src/index.ts",
-    "build": "tsc --module system --moduleResolution Node --outFile docs/js/damned.js --target ES2015 --watch src/index.ts",
+    "start": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"target\\\":\\\"ES2015\\\"} ts-node src/index.ts",
+    "build": "rollup --config --watch",
     "csscomb": "csscomb --config docs/css/.csscomb.json docs/css/style.scss docs/css/partials/*.scss",
     "sassc": "sass --watch docs/css/style.scss:docs/css/style.min.css --no-cache --sourcemap=none --style=compressed",
     "serve": "npx http-server docs/ -c-1 -o",
@@ -23,11 +23,18 @@
   "devDependencies": {
     "@types/ansi-escapes": "^3.0.0",
     "@types/node": "^10.12.10",
+    "rollup": "^0.67.4",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-typescript2": "^0.18.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.6"
   },
   "dependencies": {
     "ansi-escapes": "^3.1.0",
+    "cross-env": "^5.2.0",
     "xterm": "^3.8.0"
   }
 }

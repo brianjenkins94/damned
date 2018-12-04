@@ -2,7 +2,7 @@
 
 let term;
 
-System.import("/js/damned.js");
+import("/js/damned/index.js");
 
 document.addEventListener("DOMContentLoaded", function(event) {
 

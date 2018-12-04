@@ -14,7 +14,10 @@
             ],
             "args": [
                 "${workspaceFolder}/src/index.ts",
-            ],
+			],
+			"env": {
+				"TS_NODE_COMPILER_OPTIONS": "{\\\"target\\\":\\\"ES2015\\\"}"
+			},
             "skipFiles": [
                 "${workspaceRoot}/node_modules/**/*.js",
                 "<node_internals>/**/*.js"
