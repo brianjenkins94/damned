@@ -1,24 +1,24 @@
 // WORKAROUND: Couldn't get `xterm` to resolve its type definitions correctly.
-declare let term: any;
+declare let xtermJs: any;
 
 import { EventEmitter } from "events";
 
 import * as ansiEscapes from "ansi-escapes";
 
-class Browser extends EventEmitter {
-	public rows = term.rows;
-	public columns = term.cols;
+let Terminal = class Browser extends EventEmitter {
+	public rows = xtermJs.rows;
+	public columns = xtermJs.cols;
 
 	// <Initialization>
 
 	public constructor() {
 		super();
 
-		term.on("data", (key) => {
+		xtermJs.on("data", (key) => {
 			this.emit("key", key);
 		});
 
-		term.on("resize", () => {
+		xtermJs.on("resize", () => {
 			this.emit("resize");
 		});
 	}
@@ -28,13 +28,13 @@ class Browser extends EventEmitter {
 	public clearLine(direction) {
 		switch (direction) {
 			case -1:
-				term.write(ansiEscapes.eraseStartLine);
+				xtermJs.write(ansiEscapes.eraseStartLine);
 				break;
 			case 1:
-				term.write(ansiEscapes.eraseEndLine);
+				xtermJs.write(ansiEscapes.eraseEndLine);
 				break;
 			case 0:
-				term.write(ansiEscapes.eraseLine);
+				xtermJs.write(ansiEscapes.eraseLine);
 				break;
 			default:
 				throw new SyntaxError("missing formal parameter (direction)");
@@ -42,7 +42,7 @@ class Browser extends EventEmitter {
 	}
 
 	public clearScreenDown() {
-		term.write(ansiEscapes.eraseDown);
+		xtermJs.write(ansiEscapes.eraseDown);
 	}
 
 	public cursorTo(x, y) {
@@ -54,7 +54,7 @@ class Browser extends EventEmitter {
 			throw new SyntaxError("missing formal parameter (y)");
 		}
 
-		term.write(ansiEscapes.cursorTo(x, y));
+		xtermJs.write(ansiEscapes.cursorTo(x, y));
 	}
 
 	public getWindowSize() {
@@ -70,12 +70,12 @@ class Browser extends EventEmitter {
 			throw new SyntaxError("missing formal parameter (y)");
 		}
 
-		term.write(ansiEscapes.cursorMove(dx, dy));
+		xtermJs.write(ansiEscapes.cursorMove(dx, dy));
 	}
 
 	public write(text) {
-		term.write(text);
+		xtermJs.write(text);
 	}
-}
+};
 
-export { Browser };
+export { Terminal };

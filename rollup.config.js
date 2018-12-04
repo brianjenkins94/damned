@@ -5,7 +5,10 @@ import nodeResolve from "rollup-plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
 
 export default {
-	"input": "src/index.ts",
+	"input": {
+		"index": "src/index.ts",
+		"environment/browser": "src/environment/browser.ts"
+	},
 	"output": {
 		"dir": "docs/js/damned",
 		"format": "es"

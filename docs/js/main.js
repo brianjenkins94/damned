@@ -1,6 +1,6 @@
 "use strict";
 
-let term;
+let xtermJs;
 
 import("/js/damned/index.js");
 
@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	Terminal.applyAddon(fit);
 
-	term = new Terminal({
+	xtermJs = new Terminal({
 		"allowTransparency": true,
 		"theme": {
 			"background": "rgba(0, 0, 0, 0.85)"
 		}
  	});
 
-	term.open(document.getElementById("terminal"), true);
+	xtermJs.open(document.getElementById("terminal"), true);
 
-	term.fit();
+	xtermJs.fit();
 
 	// Handle/debounce window resize
 	let resizeTimer;
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		clearTimeout(resizeTimer);
 
 		resizeTimer = setTimeout(function() {
-			term.fit();
+			xtermJs.fit();
 		}, 250);
 	});
 
