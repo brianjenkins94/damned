@@ -5,15 +5,11 @@ import nodeResolve from "rollup-plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";
 
 export default {
-	"input": {
-		"index": "src/index.ts",
-		"environment/browser": "src/environment/browser.ts"
-	},
+	"input": "src/index.ts",
 	"output": {
-		"dir": "docs/js/damned",
+		"file": "docs/js/damned.js",
 		"format": "es"
 	},
-	"experimentalCodeSplitting": true,
 	"plugins": [
 		commonJs({
 			"namedExports": {

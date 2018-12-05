@@ -2,8 +2,6 @@
 
 let xtermJs;
 
-System.import("/js/damned/index.js");
-
 document.addEventListener("DOMContentLoaded", function(event) {
 
 	Terminal.applyAddon(fit);
@@ -18,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	xtermJs.open(document.getElementById("terminal"), true);
 
 	xtermJs.fit();
+
+	// Load damned
+	try {
+		new Function("import(\"\")");
+		import("/js/damned.js");
+	} catch (error) {
+		System.import("/js/damned.js");
+	}
 
 	// Handle/debounce window resize
 	let resizeTimer;
