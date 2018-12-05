@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		new Function("import(\"\")");
 		import("./damned.js");
 	} catch (error) {
-		System.import(document.pathname + "js/damned.js");
+		System.import(window.location.pathname + "js/damned.js");
 	}
 
 	// Handle/debounce window resize
