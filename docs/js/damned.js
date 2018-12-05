@@ -885,11 +885,11 @@ class Browser extends EventEmitter {
 
 // This is pretty terrible, but I can't find a better way to do it.
 let Enviornment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
-let Terminal = new Enviornment();
+let terminal = new Enviornment();
 
-Terminal.on("key", function (data) {
-    Terminal.write("We heard a thing! ");
+terminal.on("key", function (data) {
+    terminal.write("We heard a thing! ");
 });
-Terminal.on("resize", function (data) {
-    Terminal.write("We heard a resize! ");
+terminal.on("resize", function (data) {
+    terminal.write("We heard a resize! ");
 });

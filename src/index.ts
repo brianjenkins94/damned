@@ -1,6 +1,6 @@
 "use strict";
 
-import { Terminal as term } from "./environment";
+import { terminal as term } from "./environment";
 
 term.on("key", function(data) {
 	term.write("We heard a thing! ");
