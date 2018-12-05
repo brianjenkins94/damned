@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	// Load damned
 	try {
 		new Function("import(\"\")");
-		import("/js/damned.js");
+		import("./damned.js");
 	} catch (error) {
-		System.import("/js/damned.js");
+		System.import(document.pathname + "js/damned.js");
 	}
 
 	// Handle/debounce window resize
