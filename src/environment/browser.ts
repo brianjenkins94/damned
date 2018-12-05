@@ -5,7 +5,7 @@ import { EventEmitter } from "events";
 
 import * as ansiEscapes from "ansi-escapes";
 
-let Terminal = class Browser extends EventEmitter {
+class Browser extends EventEmitter {
 	public rows = xtermJs.rows;
 	public columns = xtermJs.cols;
 
@@ -76,6 +76,6 @@ let Terminal = class Browser extends EventEmitter {
 	public write(text) {
 		xtermJs.write(text);
 	}
-};
+}
 
-export default Terminal;
+export default Browser;

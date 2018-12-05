@@ -1,11 +1,4 @@
-let environment;
+// This is pretty terrible, but I can't find a better way to do it.
+let Terminal = typeof(process) !== "undefined" ? require("./terminal").default : require("./environment/browser.js").default;
 
-if (typeof(process) !== "undefined") {
-	environment = "./terminal";
-} else {
-	environment = "./environment/browser.js";
-}
-
-export default (async function() {
-	return new (await import(environment)).default();
-})();
+export default new Terminal();

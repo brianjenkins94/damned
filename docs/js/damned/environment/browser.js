@@ -825,7 +825,7 @@ var ansiEscapes_5 = ansiEscapes.clearScreenDown;
 var ansiEscapes_6 = ansiEscapes.cursorTo;
 var ansiEscapes_7 = ansiEscapes.cursorMove;
 
-let Terminal = class Browser extends EventEmitter {
+class Browser extends EventEmitter {
     // <Initialization>
     constructor() {
         super();
@@ -881,6 +881,6 @@ let Terminal = class Browser extends EventEmitter {
     write(text) {
         xtermJs.write(text);
     }
-};
+}
 
-export default Terminal;
+export default Browser;

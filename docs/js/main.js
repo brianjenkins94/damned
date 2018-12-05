@@ -2,7 +2,7 @@
 
 let xtermJs;
 
-import("/js/damned/index.js");
+System.import("/js/damned/index.js");
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
