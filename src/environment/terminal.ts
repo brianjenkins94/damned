@@ -54,4 +54,4 @@ class Terminal extends EventEmitter {
 	}
 }
 
-export default Terminal;
+export { Terminal };

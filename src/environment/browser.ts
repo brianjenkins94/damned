@@ -78,4 +78,4 @@ class Browser extends EventEmitter {
 	}
 }
 
-export default Browser;
+export { Browser };
