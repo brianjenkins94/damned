@@ -826,19 +826,19 @@ var ansiEscapes_6 = ansiEscapes.cursorTo;
 var ansiEscapes_7 = ansiEscapes.cursorMove;
 
 class Browser extends EventEmitter {
-    // <Initialization>
     constructor() {
         super();
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
+        // [!] Broken
         xtermJs.on("data", (key) => {
-            this.emit("key", key);
+            console.log(key);
+            this.emit("keypress", key);
         });
         xtermJs.on("resize", () => {
             this.emit("resize");
         });
     }
-    // </Initialization>
     clearLine(direction) {
         switch (direction) {
             case -1:
@@ -884,12 +884,91 @@ class Browser extends EventEmitter {
 }
 
 // This is pretty terrible, but I can't find a better way to do it.
-let Enviornment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
-let terminal = new Enviornment();
+let Environment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
+let terminal = new Environment();
 
-terminal.on("key", function (data) {
-    terminal.write("We heard a thing! ");
-});
-terminal.on("resize", function (data) {
-    terminal.write("We heard a resize! ");
-});
+class Window {
+    constructor(name, overrides) {
+        this.options = {
+            // Title
+            "title": undefined,
+            // Attributes
+            "visibility": "visible"
+        };
+        this.name = name;
+        this.options = Object.assign({}, overrides, this.options);
+    }
+    getName() {
+        return this.name;
+    }
+}
+
+class Program extends EventEmitter {
+    constructor(terminal, overrides) {
+        super();
+        this.options = {
+            "useAlternate": true
+        };
+        this.windows = [{ "x": 0, "y": 0, "window": new Window({ "name": "STDSCR" }) }];
+        this.options = Object.assign({}, this.options, overrides);
+        this.terminal = terminal;
+        if (this.options["useAlternate"] === true) {
+            this.terminal.write("\u001B[?1049h");
+        }
+        this.terminal.on("keypress", function (character, metadata) {
+            console.log(character);
+            console.log(metadata);
+        });
+        this.terminal.on("resize", function (data) {
+            //this.refresh();
+        });
+    }
+    refresh() {
+        for (let x = 0; x < this.windows.length; x++) {
+            //this.windows[x]["window"].refresh();
+        }
+    }
+    destroy() {
+        this.terminal.write("\u001B]?1049h");
+    }
+    newWindow(x, y, name, overrides) {
+        this.windows.push({ "x": x, "y": y, "window": new Window(name, overrides) });
+        return this.getWindowByName(name);
+    }
+    removeWindowByName(name) {
+        this.windows.splice(this.getWindowIndexByName(name), 1);
+    }
+    getWindowByName(name) {
+        for (let x = 0; x < this.windows.length; x++) {
+            if (this.windows[x]["window"].getName() === name) {
+                return this.windows[x]["window"];
+            }
+        }
+    }
+    bringWindowToFront(name) {
+        this.windows.unshift(this.windows.splice(this.getWindowIndexByName(name), 1)[0]);
+    }
+    sendWindowToBack(name) {
+        this.windows.push(this.windows.splice(this.getWindowIndexByName(name), 1)[0]);
+    }
+    bringWindowForward(name) {
+        let index = this.getWindowIndexByName(name);
+        this.windows.splice(index - 1, 0, this.windows.splice(index, 1)[0]);
+    }
+    sendWindowBackward(name) {
+        let index = this.getWindowIndexByName(name);
+        this.windows.splice(index + 1, 0, this.windows.splice(index, 1)[0]);
+    }
+    getWindowIndexByName(name) {
+        for (let x = 0; x < this.windows.length; x++) {
+            if (this.windows[x]["window"].getName() === name) {
+                return x;
+            }
+        }
+    }
+}
+
+let program = new Program(terminal);
+let window$1 = program.newWindow(0, 0, "Program");
+
+export { terminal, program };

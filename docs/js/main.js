@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		"theme": {
 			"background": "rgba(0, 0, 0, 0.85)"
 		}
- 	});
+	});
 
 	xtermJs.open(document.getElementById("terminal"), true);
 

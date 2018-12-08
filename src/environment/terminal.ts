@@ -1,33 +1,45 @@
 import { EventEmitter } from "events";
 
-// WORKAROUND: Using `require` to avoid incorrect type definition.
-let tty = require("tty");
+// ../../node_modules/@types/node
+// 7382: class WriteStream extends net.Socket {
+// 7383:	columns: number;
+// 7384:	rows: number;
+// 7385:	isTTY: boolean;
+//    +		clearLine(dir: number): void;
+//    +		clearScreenDown(): void;
+//    +		cursorTo(x: number, y: number): void;
+//    +		getWindowSize(): void;
+//    +		moveCursor(dx: number, dy: number): void;
+// 7386: }
+
+import * as readline from "readline";
+import * as tty from "tty";
 
 class Terminal extends EventEmitter {
-	private input = new tty.ReadStream(0);
-	private output = new tty.WriteStream(1);
+	private input = process.stdin as tty.ReadStream; // new tty.ReadStream(0);
+	private output = process.stdout as tty.WriteStream; // new tty.WriteStream(1);
 
 	public rows = this.output.rows;
 	public columns = this.output.columns;
 
-	// <Initialization>
-
 	public constructor() {
 		super();
 
+		readline.emitKeypressEvents(this.input);
+
 		this.input.setRawMode(true);
 
-		this.input.on("data", (key) => {
-			this.emit("key", key);
+		// Unclear if this is necessary
+		this.input.resume();
+
+		this.input.on("keypress", (ch, key) => {
+			this.emit("keypress", ch, key);
 		});
 
-		// WORKAROUND: The `resize` event would not trigger on `this.output`.
-		process.stdout.on("resize", () => {
+		this.output.on("resize", () => {
 			this.emit("resize");
 		});
 	}
-
-	// </Initialization>
 
 	public clearLine(direction) {
 		this.output.clearLine(direction);

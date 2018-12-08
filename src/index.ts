@@ -1,11 +1,10 @@
 "use strict";
 
-import { terminal as term } from "./environment";
+import { terminal } from "./environment";
+import { Program } from "./program";
 
-term.on("key", function(data) {
-	term.write("We heard a thing! ");
-});
+let program = new Program(terminal);
 
-term.on("resize", function(data) {
-	term.write("We heard a resize! ");
-});
+let window = program.newWindow(0, 0, "Program");
+
+export { terminal, program };

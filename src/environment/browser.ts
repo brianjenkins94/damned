@@ -9,21 +9,18 @@ class Browser extends EventEmitter {
 	public rows = xtermJs.rows;
 	public columns = xtermJs.cols;
 
-	// <Initialization>
-
 	public constructor() {
 		super();
 
-		xtermJs.on("data", (key) => {
-			this.emit("key", key);
+		// TODO: Detect and pass { sequence, name, ctrl, meta, shift }
+		xtermJs.on("data", (character, metadata) => {
+			this.emit("keypress", character);
 		});
 
 		xtermJs.on("resize", () => {
 			this.emit("resize");
 		});
 	}
-
-	// </Initialization>
 
 	public clearLine(direction) {
 		switch (direction) {
