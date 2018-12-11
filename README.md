@@ -1,6 +1,6 @@
 <img height="128px" width="128px" align="right" />
 
-# damned
+# Damned
 
 > An ungodly resurrection of chjj's blessed.
 
@@ -43,6 +43,6 @@
 
 ### License
 
-`damned` is licensed under the [MIT License](https://github.com/brianjenkins94/damned/blob/master/LICENSE).
+`Damned` is licensed under the [MIT License](https://github.com/brianjenkins94/damned/blob/master/LICENSE).
 
 All files located in the `node_modules` directory are externally maintained libraries used by this software which have their own licenses; it is recommend that you read them, as their terms may differ from the terms in the MIT License.
