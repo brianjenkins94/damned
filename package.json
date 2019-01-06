@@ -23,11 +23,11 @@
   "devDependencies": {
     "@types/ansi-escapes": "^3.0.0",
     "@types/node": "^10.12.10",
-    "rollup": "^0.67.4",
+    "rollup": "^1.0.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-typescript2": "^0.18.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.6"

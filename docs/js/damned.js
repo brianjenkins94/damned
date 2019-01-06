@@ -830,10 +830,10 @@ class Browser extends EventEmitter {
         super();
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
-        // [!] Broken
-        xtermJs.on("data", (key) => {
-            console.log(key);
-            this.emit("keypress", key);
+        // TODO: Detect and pass { sequence, name, ctrl, meta, shift }
+        xtermJs.on("data", (character, metadata) => {
+            this.emit("keypress", character);
+            this.emit("keypress", metadata);
         });
         xtermJs.on("resize", () => {
             this.emit("resize");
@@ -904,6 +904,7 @@ class Window {
 }
 
 class Program extends EventEmitter {
+    // Initialization
     constructor(terminal, overrides) {
         super();
         this.options = {
@@ -931,9 +932,10 @@ class Program extends EventEmitter {
     destroy() {
         this.terminal.write("\u001B]?1049h");
     }
+    // Window
     newWindow(x, y, name, overrides) {
         this.windows.push({ "x": x, "y": y, "window": new Window(name, overrides) });
-        return this.getWindowByName(name);
+        return name;
     }
     removeWindowByName(name) {
         this.windows.splice(this.getWindowIndexByName(name), 1);
@@ -959,6 +961,7 @@ class Program extends EventEmitter {
         let index = this.getWindowIndexByName(name);
         this.windows.splice(index + 1, 0, this.windows.splice(index, 1)[0]);
     }
+    // Utilities
     getWindowIndexByName(name) {
         for (let x = 0; x < this.windows.length; x++) {
             if (this.windows[x]["window"].getName() === name) {
