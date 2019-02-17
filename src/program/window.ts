@@ -2,7 +2,7 @@ class Window {
 	private name;
 	private options = {
 		// Title
-		"title": undefined,
+		"title": "",
 		// Attributes
 		"visibility": "visible"
 	};

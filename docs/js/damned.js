@@ -831,9 +831,17 @@ class Browser extends EventEmitter {
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
         // TODO: Detect and pass { sequence, name, ctrl, meta, shift }
-        xtermJs.on("data", (character, metadata) => {
-            this.emit("keypress", character);
-            this.emit("keypress", metadata);
+        //xtermJs.on("data", (character, metadata) => {
+        // 	this.emit("keypress", character);
+        //});
+        xtermJs.attachCustomKeyEventHandler(function (event) {
+            this.emit("keypress", {
+                //"sequence": "",
+                "name": event.key,
+                "ctrl": event.ctrlKey,
+                "meta": event.metaKey,
+                "shift": event.shiftKey
+            });
         });
         xtermJs.on("resize", () => {
             this.emit("resize");
@@ -891,7 +899,7 @@ class Window {
     constructor(name, overrides) {
         this.options = {
             // Title
-            "title": undefined,
+            "title": "",
             // Attributes
             "visibility": "visible"
         };

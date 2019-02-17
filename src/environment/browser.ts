@@ -12,9 +12,16 @@ class Browser extends EventEmitter {
 	public constructor() {
 		super();
 
-		// TODO: Detect and pass { sequence, name, ctrl, meta, shift }
-		xtermJs.on("data", (character, metadata) => {
-			this.emit("keypress", character);
+		xtermJs.attachCustomKeyEventHandler(function(event) {
+			if (event.type === "keypress") {
+				this.emit("keypress", {
+					//"sequence": "",
+					"name": event.key.toLowerCase(),
+					"ctrl": event.ctrlKey,
+					"meta": event.metaKey,
+					"shift": event.shiftKey
+				});
+			}
 		});
 
 		xtermJs.on("resize", () => {
