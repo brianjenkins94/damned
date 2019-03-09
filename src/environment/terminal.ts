@@ -1,16 +1,13 @@
 import { EventEmitter } from "events";
 
-// ../../node_modules/@types/node
-// 7382: class WriteStream extends net.Socket {
-// 7383:	columns: number;
-// 7384:	rows: number;
-// 7385:	isTTY: boolean;
+// ../../node_modules/@types/node/tty.d.ts
+//   45:	isTTY: boolean;
 //    +		clearLine(dir: number): void;
 //    +		clearScreenDown(): void;
 //    +		cursorTo(x: number, y: number): void;
 //    +		getWindowSize(): void;
 //    +		moveCursor(dx: number, dy: number): void;
-// 7386: }
+//   46: }
 
 import * as readline from "readline";
 import * as tty from "tty";

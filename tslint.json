@@ -6,6 +6,7 @@
 	"jsRules": {
 		"align": [true, "elements", "members", "parameters", "statements"],
 		"comment-format": false,
+		"completed-docs": false,
 		"indent": [true, "tabs"],
 		"max-file-line-count": false,
 		"max-line-length": false,
@@ -25,6 +26,7 @@
 		"prefer-conditional-expression": false,
 		"prefer-const": false,
 		"prefer-for-of": false,
+		"prefer-function-over-method": false,
 		"prefer-template": false,
 		"trailing-comma": false,
 		"typedef": false
@@ -32,6 +34,7 @@
 	"rules": {
 		"align": [true, "elements", "members", "parameters", "statements"],
 		"comment-format": false,
+		"completed-docs": false,
 		"indent": [true, "tabs"],
 		"max-file-line-count": false,
 		"max-line-length": false,
@@ -51,6 +54,7 @@
 		"prefer-conditional-expression": false,
 		"prefer-const": false,
 		"prefer-for-of": false,
+		"prefer-function-over-method": false,
 		"prefer-template": false,
 		"trailing-comma": false,
 		"typedef": false

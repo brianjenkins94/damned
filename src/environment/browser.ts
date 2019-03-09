@@ -12,11 +12,11 @@ class Browser extends EventEmitter {
 	public constructor() {
 		super();
 
-		xtermJs.attachCustomKeyEventHandler(function(event) {
+		xtermJs.attachCustomKeyEventHandler((event) => {
 			if (event.type === "keypress") {
-				this.emit("keypress", {
+				this.emit("keypress", event.key.toLowerCase(), {
 					//"sequence": "",
-					"name": event.key.toLowerCase(),
+					"name": event.key,
 					"ctrl": event.ctrlKey,
 					"meta": event.metaKey,
 					"shift": event.shiftKey

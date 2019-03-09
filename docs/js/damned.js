@@ -774,6 +774,15 @@ x.scrollUp = ESC + 'S';
 x.scrollDown = ESC + 'T';
 
 x.clearScreen = '\u001Bc';
+
+x.clearTerminal = process$1.platform === 'win32' ?
+	`${x.eraseScreen}${ESC}0f` :
+	// 1. Erases the screen (Only done in case `2` is not supported)
+	// 2. Erases the whole screen including scrollback buffer
+	// 3. Moves cursor to the top-left position
+	// More info: https://www.real-world-systems.com/docs/ANSIcode.html
+	`${x.eraseScreen}${ESC}3J${ESC}H`;
+
 x.beep = BEL;
 
 x.link = (text, url) => {
@@ -815,7 +824,7 @@ x.image = (buf, opts) => {
 
 x.iTerm = {};
 
-x.iTerm.setCwd = cwd$$1 => OSC + '50;CurrentDir=' + (cwd$$1 || process$1.cwd()) + BEL;
+x.iTerm.setCwd = cwd => OSC + '50;CurrentDir=' + (cwd || process$1.cwd()) + BEL;
 });
 var ansiEscapes_1 = ansiEscapes.eraseStartLine;
 var ansiEscapes_2 = ansiEscapes.eraseEndLine;
@@ -830,18 +839,16 @@ class Browser extends EventEmitter {
         super();
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
-        // TODO: Detect and pass { sequence, name, ctrl, meta, shift }
-        //xtermJs.on("data", (character, metadata) => {
-        // 	this.emit("keypress", character);
-        //});
-        xtermJs.attachCustomKeyEventHandler(function (event) {
-            this.emit("keypress", {
-                //"sequence": "",
-                "name": event.key,
-                "ctrl": event.ctrlKey,
-                "meta": event.metaKey,
-                "shift": event.shiftKey
-            });
+        xtermJs.attachCustomKeyEventHandler((event) => {
+            if (event.type === "keypress") {
+                this.emit("keypress", event.key.toLowerCase(), {
+                    //"sequence": "",
+                    "name": event.key,
+                    "ctrl": event.ctrlKey,
+                    "meta": event.metaKey,
+                    "shift": event.shiftKey
+                });
+            }
         });
         xtermJs.on("resize", () => {
             this.emit("resize");
