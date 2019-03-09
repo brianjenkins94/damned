@@ -840,10 +840,10 @@ class Browser extends EventEmitter {
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
         xtermJs.attachCustomKeyEventHandler((event) => {
-            if (event.type === "keypress") {
-                this.emit("keypress", event.key.toLowerCase(), {
+            if (event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
+                this.emit("keypress", event.key, {
                     //"sequence": "",
-                    "name": event.key,
+                    "name": event.key.toLowerCase(),
                     "ctrl": event.ctrlKey,
                     "meta": event.metaKey,
                     "shift": event.shiftKey
@@ -902,63 +902,103 @@ class Browser extends EventEmitter {
 let Environment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
 let terminal = new Environment();
 
-class Window {
+class Node extends EventEmitter {
+}
+
+class ContainerNode extends Node {
+    constructor() {
+        super(...arguments);
+        this.children = [];
+    }
+    refresh() {
+        for (let x = 0; x < this.children.length; x++) {
+            this.children[x].refresh();
+        }
+    }
+    append(element) {
+        this.children.push(element);
+    }
+}
+
+class Window extends ContainerNode {
+    // Initialization
     constructor(name, overrides) {
+        super();
         this.options = {
             // Title
             "title": "",
             // Attributes
-            "visibility": "visible"
+            "visibility": "visible",
+            // Positioning
+            "position": {
+                "top": 0,
+                "right": 12,
+                "bottom": 12,
+                "left": 0
+            }
         };
         this.name = name;
-        this.options = Object.assign({}, overrides, this.options);
+        this.options = Object.assign({}, this.options, overrides);
     }
     getName() {
         return this.name;
     }
 }
 
-class Program extends EventEmitter {
+class Box extends ContainerNode {
+}
+
+class Program extends ContainerNode {
     // Initialization
-    constructor(terminal, overrides) {
+    constructor(overrides) {
         super();
         this.options = {
-            "useAlternate": true
+            "useAlternateBuffer": true
         };
-        this.windows = [{ "x": 0, "y": 0, "window": new Window({ "name": "STDSCR" }) }];
+        this.terminal = terminal;
+        this.windows = [new Window({ "name": "STDSCR" })];
         this.options = Object.assign({}, this.options, overrides);
         this.terminal = terminal;
-        if (this.options["useAlternate"] === true) {
+        if (this.options["useAlternateBuffer"] === true) {
             this.terminal.write("\u001B[?1049h");
         }
-        this.terminal.on("keypress", function (character, metadata) {
-            console.log(character);
-            console.log(metadata);
+        this.terminal.on("keypress", (character, metadata) => {
+            this.emit("keypress");
         });
-        this.terminal.on("resize", function (data) {
-            //this.refresh();
+        this.terminal.on("resize", () => {
+            super.refresh();
         });
-    }
-    refresh() {
-        for (let x = 0; x < this.windows.length; x++) {
-            //this.windows[x]["window"].refresh();
-        }
     }
     destroy() {
         this.terminal.write("\u001B]?1049h");
     }
-    // Window
-    newWindow(x, y, name, overrides) {
-        this.windows.push({ "x": x, "y": y, "window": new Window(name, overrides) });
-        return name;
+    // Terminal
+    clearLine(direction) {
+        this.terminal.clearLine(direction);
     }
+    clearScreenDown() {
+        this.terminal.clearScreenDown();
+    }
+    cursorTo(x, y) {
+        this.terminal.cursorTo(x, y);
+    }
+    getWindowSize() {
+        this.terminal.getWindowSize();
+    }
+    moveCursor(dx, dy) {
+        this.terminal.moveCursor(dx, dy);
+    }
+    write(text) {
+        this.terminal.write(text);
+    }
+    // Window
     removeWindowByName(name) {
         this.windows.splice(this.getWindowIndexByName(name), 1);
     }
     getWindowByName(name) {
         for (let x = 0; x < this.windows.length; x++) {
-            if (this.windows[x]["window"].getName() === name) {
-                return this.windows[x]["window"];
+            if (this.windows[x].getName() === name) {
+                return this.windows[x];
             }
         }
     }
@@ -976,17 +1016,25 @@ class Program extends EventEmitter {
         let index = this.getWindowIndexByName(name);
         this.windows.splice(index + 1, 0, this.windows.splice(index, 1)[0]);
     }
-    // Utilities
+    // Window Utilities
     getWindowIndexByName(name) {
         for (let x = 0; x < this.windows.length; x++) {
-            if (this.windows[x]["window"].getName() === name) {
+            if (this.windows[x].getName() === name) {
                 return x;
             }
         }
     }
 }
+Program.Window = Window;
+Program.Box = Box;
 
-let program = new Program(terminal);
-let window$1 = program.newWindow(0, 0, "Program");
-
-export { terminal, program };
+let damned = new Program();
+// Register events
+damned.on("C-c", function (event) {
+    damned.destroy();
+});
+// Initialize new Window
+let window$1 = new Program.Window("Grid");
+damned.append(window$1);
+let box = new Program.Box();
+window$1.append(box);
