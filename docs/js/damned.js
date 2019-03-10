@@ -464,6 +464,24 @@ function unwrapListeners(arr) {
   return ret;
 }
 
+class Node extends EventEmitter {
+}
+
+class ContainerNode extends Node {
+    constructor() {
+        super(...arguments);
+        this.children = [];
+    }
+    refresh() {
+        for (let x = 0; x < this.children.length; x++) {
+            this.children[x].refresh();
+        }
+    }
+    append(element) {
+        this.children.push(element);
+    }
+}
+
 var global$1 = (typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
             typeof window !== "undefined" ? window : {});
@@ -902,23 +920,53 @@ class Browser extends EventEmitter {
 let Environment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
 let terminal = new Environment();
 
-class Node extends EventEmitter {
-}
-
-class ContainerNode extends Node {
-    constructor() {
-        super(...arguments);
-        this.children = [];
-    }
-    refresh() {
-        for (let x = 0; x < this.children.length; x++) {
-            this.children[x].refresh();
+// tslint:disable:max-classes-per-file
+class MonkeyPatchedEventEmitter extends EventEmitter {
+    emit(type, ...args) {
+        if (type !== "resize") {
+            super.emit("*", ...args);
         }
     }
-    append(element) {
-        this.children.push(element);
+}
+class Buffer extends MonkeyPatchedEventEmitter {
+    // Initialization
+    constructor() {
+        super();
+        this.on("keypress", (character, metadata) => {
+            this.emit("keypress");
+        });
+        this.on("resize", () => {
+            this.emit("resize");
+        });
+    }
+    // Alternate buffer
+    enableAlternateBuffer() {
+        buffer.write("\u001B[?1049h");
+    }
+    disableAlternateBuffer() {
+        buffer.write("\u001B]?1049h");
+    }
+    // Terminal
+    clearLine(direction) {
+        terminal.clearLine(direction);
+    }
+    clearScreenDown() {
+        terminal.clearScreenDown();
+    }
+    cursorTo(x, y) {
+        terminal.cursorTo(x, y);
+    }
+    getWindowSize() {
+        terminal.getWindowSize();
+    }
+    moveCursor(dx, dy) {
+        terminal.moveCursor(dx, dy);
+    }
+    write(text) {
+        terminal.write(text);
     }
 }
+let buffer = new Buffer();
 
 class Window extends ContainerNode {
     // Initialization
@@ -927,9 +975,21 @@ class Window extends ContainerNode {
         this.options = {
             // Title
             "title": "",
-            // Attributes
-            "visibility": "visible",
-            // Positioning
+            // Style
+            "style": {
+                "border": {
+                    "top": "─",
+                    "topRight": "┐",
+                    "right": "│",
+                    "bottomRight": "┘",
+                    "bottom": "─",
+                    "bottomLeft": "└",
+                    "left": "│",
+                    "topLeft": "┌"
+                },
+                "visibility": "visible"
+            },
+            // Position
             "position": {
                 "top": 0,
                 "right": 12,
@@ -955,41 +1015,20 @@ class Program extends ContainerNode {
         this.options = {
             "useAlternateBuffer": true
         };
-        this.terminal = terminal;
         this.windows = [new Window({ "name": "STDSCR" })];
         this.options = Object.assign({}, this.options, overrides);
-        this.terminal = terminal;
         if (this.options["useAlternateBuffer"] === true) {
-            this.terminal.write("\u001B[?1049h");
+            buffer.enableAlternateBuffer();
         }
-        this.terminal.on("keypress", (character, metadata) => {
+        buffer.on("*", (character, metadata) => {
             this.emit("keypress");
         });
-        this.terminal.on("resize", () => {
+        buffer.on("resize", () => {
             super.refresh();
         });
     }
     destroy() {
-        this.terminal.write("\u001B]?1049h");
-    }
-    // Terminal
-    clearLine(direction) {
-        this.terminal.clearLine(direction);
-    }
-    clearScreenDown() {
-        this.terminal.clearScreenDown();
-    }
-    cursorTo(x, y) {
-        this.terminal.cursorTo(x, y);
-    }
-    getWindowSize() {
-        this.terminal.getWindowSize();
-    }
-    moveCursor(dx, dy) {
-        this.terminal.moveCursor(dx, dy);
-    }
-    write(text) {
-        this.terminal.write(text);
+        buffer.disableAlternateBuffer();
     }
     // Window
     removeWindowByName(name) {

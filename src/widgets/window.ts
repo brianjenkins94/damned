@@ -5,9 +5,21 @@ class Window extends ContainerNode {
 	private options = {
 		// Title
 		"title": "",
-		// Attributes
-		"visibility": "visible",
-		// Positioning
+		// Style
+		"style": {
+			"border": {
+				"top": "─",
+				"topRight": "┐",
+				"right": "│",
+				"bottomRight": "┘",
+				"bottom": "─",
+				"bottomLeft": "└",
+				"left": "│",
+				"topLeft": "┌"
+			},
+			"visibility": "visible"
+		},
+		// Position
 		"position": {
 			"top": 0,
 			"right": 12,

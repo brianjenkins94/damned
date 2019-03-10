@@ -1,9 +1,10 @@
-import { terminal } from "../environment";
+import { ContainerNode } from "../widgets/abstract/containerNode";
 
+import { buffer } from "./buffer";
+
+// Widgets
 import { Window } from "../widgets/window";
 import { Box } from "../widgets/box";
-
-import { ContainerNode } from "../widgets/abstract/containerNode";
 
 class Program extends ContainerNode {
 	public static Window = Window;
@@ -12,7 +13,6 @@ class Program extends ContainerNode {
 	private options = {
 		"useAlternateBuffer": true
 	};
-	private terminal = terminal;
 	private windows = [new Window({ "name": "STDSCR" })];
 
 	// Initialization
@@ -22,49 +22,21 @@ class Program extends ContainerNode {
 
 		this.options = { ...this.options, ...overrides };
 
-		this.terminal = terminal;
-
 		if (this.options["useAlternateBuffer"] === true) {
-			this.terminal.write("\u001B[?1049h");
+			buffer.enableAlternateBuffer();
 		}
 
-		this.terminal.on("keypress", (character, metadata) => {
+		buffer.on("*", (type, sequence) => {
 			this.emit("keypress");
 		});
 
-		this.terminal.on("resize", () => {
+		buffer.on("resize", () => {
 			super.refresh();
 		});
 	}
 
 	public destroy() {
-		this.terminal.write("\u001B]?1049h");
-	}
-
-	// Terminal
-
-	public clearLine(direction) {
-		this.terminal.clearLine(direction);
-	}
-
-	public clearScreenDown() {
-		this.terminal.clearScreenDown();
-	}
-
-	public cursorTo(x, y) {
-		this.terminal.cursorTo(x, y);
-	}
-
-	public getWindowSize() {
-		this.terminal.getWindowSize();
-	}
-
-	public moveCursor(dx, dy) {
-		this.terminal.moveCursor(dx, dy);
-	}
-
-	public write(text) {
-		this.terminal.write(text);
+		buffer.disableAlternateBuffer();
 	}
 
 	// Window
