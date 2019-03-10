@@ -1,13 +1,15 @@
 import { EventEmitter } from "events";
 
-// ../../node_modules/@types/node/tty.d.ts
-//   45:	isTTY: boolean;
-//    +		clearLine(dir: number): void;
-//    +		clearScreenDown(): void;
-//    +		cursorTo(x: number, y: number): void;
-//    +		getWindowSize(): void;
-//    +		moveCursor(dx: number, dy: number): void;
-//   46: }
+// Monkey-patch tty.d.ts
+declare module "tty" {
+	interface WriteStream {
+		clearLine(dir: number): void;
+		clearScreenDown(): void;
+		cursorTo(x: number, y: number): void;
+		getWindowSize(): void;
+		moveCursor(dx: number, dy: number): void;
+	}
+}
 
 import * as readline from "readline";
 import * as tty from "tty";

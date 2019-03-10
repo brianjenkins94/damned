@@ -932,10 +932,10 @@ class Buffer extends MonkeyPatchedEventEmitter {
     // Initialization
     constructor() {
         super();
-        this.on("keypress", (character, metadata) => {
-            this.emit("keypress");
+        terminal.on("keypress", (character, metadata) => {
+            this.emit("keypress", character);
         });
-        this.on("resize", () => {
+        terminal.on("resize", () => {
             this.emit("resize");
         });
     }
@@ -1020,7 +1020,7 @@ class Program extends ContainerNode {
         if (this.options["useAlternateBuffer"] === true) {
             buffer.enableAlternateBuffer();
         }
-        buffer.on("*", (character, metadata) => {
+        buffer.on("*", (type, sequence) => {
             this.emit("keypress");
         });
         buffer.on("resize", () => {
