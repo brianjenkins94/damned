@@ -1,5 +1,5 @@
 // WORKAROUND: Couldn't get `xterm` to resolve its type definitions correctly.
-declare let xtermJs: any;
+declare let xtermJs;
 
 import { EventEmitter } from "events";
 
@@ -15,7 +15,6 @@ class Browser extends EventEmitter {
 		xtermJs.attachCustomKeyEventHandler((event) => {
 			if (event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
 				this.emit("keypress", event.key, {
-					//"sequence": "",
 					"name": event.key.toLowerCase(),
 					"ctrl": event.ctrlKey,
 					"meta": event.metaKey,
