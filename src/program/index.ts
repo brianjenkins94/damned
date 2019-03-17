@@ -1,9 +1,10 @@
 import { UndrawableContainerNode } from "../widgets/abstract/undrawableContainerNode";
 
-import * as fs from "fs";
-import * as path from "path";
-
 import { buffer } from "./buffer";
+
+// Widgets
+import { Window } from "../widgets/window";
+import { Box } from "../widgets/box";
 
 class Program extends UndrawableContainerNode {
 	private buffer = buffer;
@@ -21,6 +22,10 @@ class Program extends UndrawableContainerNode {
 
 		if (this.options["useAlternateBuffer"] === true) {
 			this.buffer.enableAlternateBuffer();
+
+			this.buffer.cursorTo(0, 0);
+
+			this.buffer.clearScreenDown();
 		}
 
 		this.buffer.on("*", (type, sequence) => {
@@ -31,14 +36,17 @@ class Program extends UndrawableContainerNode {
 			super.refresh();
 		});
 
-		fs.readdirSync(path.join(__dirname, "..", "widgets")).forEach((file) => {
-			if (fs.statSync(path.join(__dirname, "..", "widgets", file)).isFile()) {
-				let widgetName = file.substring(0, file.lastIndexOf("."));
-				let widgetConstructor = file[0].toUpperCase() + widgetName.substring(1);
+		//fs.readdirSync(path.join(__dirname, "..", "widgets")).forEach((file) => {
+		//	if (fs.statSync(path.join(__dirname, "..", "widgets", file)).isFile()) {
+		//		let widgetName = file.substring(0, file.lastIndexOf("."));
+		//		let widgetConstructor = file[0].toUpperCase() + widgetName.substring(1);
+		//
+		//		this.register(widgetName, require(path.join("../widgets", file))[widgetConstructor]);
+		//	}
+		//});
 
-				this.register(widgetName, require(path.join("../widgets", file))[widgetConstructor]);
-			}
-		});
+		this.register("window", Window);
+		this.register("box", Box);
 	}
 
 	public destroy() {
@@ -63,12 +71,6 @@ class Program extends UndrawableContainerNode {
 
 	public register(widgetName, widgetConstructor) {
 		this.widgets[widgetName] = widgetConstructor;
-	}
-
-	// Draw
-
-	public draw() {
-		// Nothing to draw
 	}
 
 	// Window

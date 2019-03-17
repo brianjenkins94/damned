@@ -11,6 +11,7 @@ export default {
 		"format": "es"
 	},
 	"plugins": [
+		nodeResolve(),
 		commonJs({
 			"namedExports": {
 				"ansi-escapes": ["eraseStartLine", "eraseEndLine", "eraseLine", "eraseDown", "clearScreenDown", "cursorTo", "cursorMove"]
@@ -18,7 +19,6 @@ export default {
 		}),
 		nodeBuiltins(),
 		nodeGlobals(),
-		nodeResolve(),
 		typescript({
 			"tsconfigOverride": {
 				"compilerOptions": {

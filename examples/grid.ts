@@ -8,8 +8,8 @@ damned.on("C-c", function(event) {
 });
 
 // Initialize a new Window
-let window = damned.append(damned.create("window", { "name": "Grid" }));
+let window = damned.append(damned.create("window", { "title": " Grid " }));
 
-//let box = window.append(damned.create("box"));
+let box = window.append(damned.create("box"));
 
 window.refresh();

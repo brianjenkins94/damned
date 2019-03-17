@@ -464,10 +464,7 @@ function unwrapListeners(arr) {
   return ret;
 }
 
-class Node extends EventEmitter {
-}
-
-class ContainerNode extends Node {
+class UndrawableContainerNode extends EventEmitter {
     constructor() {
         super(...arguments);
         this.children = [];
@@ -479,6 +476,7 @@ class ContainerNode extends Node {
     }
     append(element) {
         this.children.push(element);
+        return element;
     }
 }
 
@@ -860,7 +858,6 @@ class Browser extends EventEmitter {
         xtermJs.attachCustomKeyEventHandler((event) => {
             if (event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
                 this.emit("keypress", event.key, {
-                    //"sequence": "",
                     "name": event.key.toLowerCase(),
                     "ctrl": event.ctrlKey,
                     "meta": event.metaKey,
@@ -932,7 +929,10 @@ class Buffer extends MonkeyPatchedEventEmitter {
     // Initialization
     constructor() {
         super();
+        this.rows = terminal.rows;
+        this.columns = terminal.columns;
         terminal.on("keypress", (character, metadata) => {
+            // TODO: Debounce
             this.emit("keypress", character);
         });
         terminal.on("resize", () => {
@@ -962,22 +962,39 @@ class Buffer extends MonkeyPatchedEventEmitter {
     moveCursor(dx, dy) {
         terminal.moveCursor(dx, dy);
     }
-    write(text) {
+    write(text = "") {
         terminal.write(text);
     }
 }
 let buffer = new Buffer();
 
-class Window extends ContainerNode {
-    // Initialization
-    constructor(name, overrides?) {
-        super();
+class Node extends EventEmitter {
+    constructor() {
+        super(...arguments);
         this.options = {
             // Title
             "title": "",
             // Style
             "style": {
-                "border": {
+                "visibility": "visible"
+            },
+            // Sizing
+            "rows": 0,
+            "columns": 0,
+            // Positioning
+            "margin": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "left": 0
+            },
+            "border": {
+                "top": 0,
+                "right": 0,
+                "bottom": 0,
+                "left": 0,
+                // Style
+                "style": {
                     "top": "─",
                     "topRight": "┐",
                     "right": "│",
@@ -986,94 +1003,169 @@ class Window extends ContainerNode {
                     "bottomLeft": "└",
                     "left": "│",
                     "topLeft": "┌"
-                },
-                "visibility": "visible"
+                }
             },
-            // Position
-            "position": {
+            "padding": {
                 "top": 0,
-                "right": 12,
-                "bottom": 12,
+                "right": 0,
+                "bottom": 0,
                 "left": 0
             }
         };
-        this.name = name;
+    }
+}
+
+class ContainerNode extends Node {
+    constructor() {
+        super(...arguments);
+        this.children = [];
+    }
+    refresh() {
+        for (let x = 0; x < this.children.length; x++) {
+            this.children[x].refresh();
+        }
+        this.draw();
+    }
+    append(element) {
+        this.children.push(element);
+        return element;
+    }
+}
+
+class Window extends ContainerNode {
+    // Initialization
+    constructor(buffer, overrides) {
+        super();
+        this.buffer = buffer;
         this.options = Object.assign({}, this.options, overrides);
     }
-    getName() {
-        return this.name;
+    draw() {
+        this.buffer.cursorTo(0, 0);
+        this.buffer.write(this.options.border.style.topLeft);
+        for (let x = 1; x < this.buffer.columns - 1; x++) {
+            this.buffer.write(this.options.border.style.top);
+        }
+        this.buffer.write(this.options.border.style.topRight);
+        for (let x = 1; x < this.buffer.rows - 1; x++) {
+            this.buffer.cursorTo(0, x);
+            this.buffer.write(this.options.border.style.left);
+            this.buffer.cursorTo(this.buffer.columns - 1, x);
+            this.buffer.write(this.options.border.style.right);
+        }
+        this.buffer.cursorTo(0, this.buffer.rows);
+        this.buffer.write(this.options.border.style.bottomLeft);
+        for (let x = 1; x < this.buffer.columns - 1; x++) {
+            this.buffer.write(this.options.border.style.bottom);
+        }
+        this.buffer.write(this.options.border.style.bottomRight);
+        if (this.options.title !== undefined) {
+            this.buffer.cursorTo(Math.floor((this.buffer.columns / 2) - (this.options.title.length / 2)), 0);
+            this.buffer.write(this.options.title);
+        }
+        this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
     }
 }
 
 class Box extends ContainerNode {
+    constructor(buffer, overrides) {
+        super();
+        this.buffer = buffer;
+        this.options = Object.assign({}, this.options, overrides);
+    }
+    draw() {
+        console.error("Not yet implemented.");
+    }
 }
 
-class Program extends ContainerNode {
+class Program extends UndrawableContainerNode {
     // Initialization
-    constructor(overrides?) {
+    constructor(overrides) {
         super();
+        this.buffer = buffer;
         this.options = {
             "useAlternateBuffer": true
         };
-        this.windows = [new Window({ "name": "STDSCR" })];
+        this.widgets = {};
         this.options = Object.assign({}, this.options, overrides);
         if (this.options["useAlternateBuffer"] === true) {
-            buffer.enableAlternateBuffer();
+            this.buffer.enableAlternateBuffer();
+            this.buffer.cursorTo(0, 0);
+            this.buffer.clearScreenDown();
         }
-        buffer.on("*", (type, sequence) => {
+        this.buffer.on("*", (type, sequence) => {
             this.emit("keypress");
         });
-        buffer.on("resize", () => {
+        this.buffer.on("resize", () => {
             super.refresh();
         });
+        //fs.readdirSync(path.join(__dirname, "..", "widgets")).forEach((file) => {
+        //	if (fs.statSync(path.join(__dirname, "..", "widgets", file)).isFile()) {
+        //		let widgetName = file.substring(0, file.lastIndexOf("."));
+        //		let widgetConstructor = file[0].toUpperCase() + widgetName.substring(1);
+        //
+        //		this.register(widgetName, require(path.join("../widgets", file))[widgetConstructor]);
+        //	}
+        //});
+        this.register("window", Window);
+        this.register("box", Box);
     }
     destroy() {
-        buffer.disableAlternateBuffer();
+        this.buffer.disableAlternateBuffer();
+    }
+    // Create
+    create(widgetName, overrides) {
+        return new this.widgets[widgetName](this.buffer, overrides);
+    }
+    // Append
+    append(window) {
+        this.children.push(window);
+        return window;
+    }
+    // Register
+    register(widgetName, widgetConstructor) {
+        this.widgets[widgetName] = widgetConstructor;
     }
     // Window
     removeWindowByName(name) {
-        this.windows.splice(this.getWindowIndexByName(name), 1);
+        this.children.splice(this.getWindowIndexByName(name), 1);
     }
     getWindowByName(name) {
-        for (let x = 0; x < this.windows.length; x++) {
-            if (this.windows[x].getName() === name) {
-                return this.windows[x];
+        for (let x = 0; x < this.children.length; x++) {
+            if (this.children[x].getName() === name) {
+                return this.children[x];
             }
         }
     }
     bringWindowToFront(name) {
-        this.windows.unshift(this.windows.splice(this.getWindowIndexByName(name), 1)[0]);
+        this.children.unshift(this.children.splice(this.getWindowIndexByName(name), 1)[0]);
     }
     sendWindowToBack(name) {
-        this.windows.push(this.windows.splice(this.getWindowIndexByName(name), 1)[0]);
+        this.children.push(this.children.splice(this.getWindowIndexByName(name), 1)[0]);
     }
     bringWindowForward(name) {
         let index = this.getWindowIndexByName(name);
-        this.windows.splice(index - 1, 0, this.windows.splice(index, 1)[0]);
+        this.children.splice(index - 1, 0, this.children.splice(index, 1)[0]);
     }
     sendWindowBackward(name) {
         let index = this.getWindowIndexByName(name);
-        this.windows.splice(index + 1, 0, this.windows.splice(index, 1)[0]);
+        this.children.splice(index + 1, 0, this.children.splice(index, 1)[0]);
     }
     // Window Utilities
     getWindowIndexByName(name) {
-        for (let x = 0; x < this.windows.length; x++) {
-            if (this.windows[x].getName() === name) {
+        for (let x = 0; x < this.children.length; x++) {
+            if (this.children[x].getName() === name) {
                 return x;
             }
         }
     }
 }
-Program.Window = Window;
-Program.Box = Box;
 
 let damned = new Program();
 // Register events
 damned.on("C-c", function (event) {
     damned.destroy();
 });
-// Initialize new Window
-let window$1 = new Program.Window("Grid");
-damned.append(window$1);
-let box = new Program.Box();
-window$1.append(box);
+// Initialize a new Window
+let window$1 = damned.append(damned.create("window", { "title": " Grid " }));
+let box = window$1.append(damned.create("box"));
+window$1.refresh();

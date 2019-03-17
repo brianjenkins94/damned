@@ -1,36 +1,7 @@
 import { ContainerNode } from "./abstract/containerNode";
 
-import * as uuid from "uuid";
-
 class Window extends ContainerNode {
 	private buffer;
-	private options = {
-		// Metadata
-		"name": uuid.v4(),
-		// Title
-		"title": "",
-		// Style
-		"style": {
-			"border": {
-				"top": "─",
-				"topRight": "┐",
-				"right": "│",
-				"bottomRight": "┘",
-				"bottom": "─",
-				"bottomLeft": "└",
-				"left": "│",
-				"topLeft": "┌"
-			},
-			"visibility": "visible"
-		},
-		// Position
-		"position": {
-			"top": 0,
-			"right": 12,
-			"bottom": 12,
-			"left": 0
-		}
-	};
 
 	// Initialization
 
@@ -45,15 +16,41 @@ class Window extends ContainerNode {
 	public draw() {
 		this.buffer.cursorTo(0, 0);
 
-		for (let x = 0; x < this.buffer.columns; x++) {
-			this.buffer.write("-");
+		this.buffer.write(this.options.border.style.topLeft);
+
+		for (let x = 1; x < this.buffer.columns - 1; x++) {
+			this.buffer.write(this.options.border.style.top);
+		}
+
+		this.buffer.write(this.options.border.style.topRight);
+
+		for (let x = 1; x < this.buffer.rows - 1; x++) {
+			this.buffer.cursorTo(0, x);
+
+			this.buffer.write(this.options.border.style.left);
+
+			this.buffer.cursorTo(this.buffer.columns - 1, x);
+
+			this.buffer.write(this.options.border.style.right);
 		}
 
 		this.buffer.cursorTo(0, this.buffer.rows);
 
-		for (let x = 0; x < this.buffer.columns; x++) {
-			this.buffer.write("_");
+		this.buffer.write(this.options.border.style.bottomLeft);
+
+		for (let x = 1; x < this.buffer.columns - 1; x++) {
+			this.buffer.write(this.options.border.style.bottom);
 		}
+
+		this.buffer.write(this.options.border.style.bottomRight);
+
+		if (this.options.title !== undefined) {
+			this.buffer.cursorTo(Math.floor((this.buffer.columns / 2) - (this.options.title.length / 2)), 0);
+
+			this.buffer.write(this.options.title);
+		}
+
+		this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
 	}
 }
 
