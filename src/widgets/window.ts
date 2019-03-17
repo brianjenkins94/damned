@@ -13,44 +13,46 @@ class Window extends ContainerNode {
 		this.options = { ...this.options, ...overrides };
 	}
 
+	// Draw
+
 	public draw() {
-		this.buffer.cursorTo(0, 0);
+		// tslint:disable-next-line:no-this-assignment
+		let { buffer } = this;
+		let { title, margin, border } = this.options;
 
-		this.buffer.write(this.options.border.style.topLeft);
+		if (border !== undefined && border.style !== undefined) {
+			buffer.cursorTo(margin.left, margin.top);
 
-		for (let x = 1; x < this.buffer.columns - 1; x++) {
-			this.buffer.write(this.options.border.style.top);
+			buffer.write(border.style.topLeft);
+
+			for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
+				buffer.write(border.style.top);
+			}
+
+			buffer.write(border.style.topRight);
+
+			for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
+				buffer.cursorTo(margin.left, x);
+
+				buffer.write(border.style.left);
+
+				buffer.cursorTo(buffer.columns - (margin.right + 1), x);
+
+				buffer.write(border.style.right);
+			}
+
+			buffer.cursorTo(margin.left, buffer.rows - (margin.bottom + 1));
+
+			buffer.write(border.style.bottomLeft);
+
+			for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
+				buffer.write(border.style.bottom);
+			}
+
+			buffer.write(border.style.bottomRight);
+
+			buffer.cursorTo(buffer.columns, buffer.rows);
 		}
-
-		this.buffer.write(this.options.border.style.topRight);
-
-		for (let x = 1; x < this.buffer.rows - 1; x++) {
-			this.buffer.cursorTo(0, x);
-
-			this.buffer.write(this.options.border.style.left);
-
-			this.buffer.cursorTo(this.buffer.columns - 1, x);
-
-			this.buffer.write(this.options.border.style.right);
-		}
-
-		this.buffer.cursorTo(0, this.buffer.rows);
-
-		this.buffer.write(this.options.border.style.bottomLeft);
-
-		for (let x = 1; x < this.buffer.columns - 1; x++) {
-			this.buffer.write(this.options.border.style.bottom);
-		}
-
-		this.buffer.write(this.options.border.style.bottomRight);
-
-		if (this.options.title !== undefined) {
-			this.buffer.cursorTo(Math.floor((this.buffer.columns / 2) - (this.options.title.length / 2)), 0);
-
-			this.buffer.write(this.options.title);
-		}
-
-		this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
 	}
 }
 

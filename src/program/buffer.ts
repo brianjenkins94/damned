@@ -21,7 +21,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 	public constructor() {
 		super();
 
-		terminal.on("keypress", (character, metadata) => {
+		terminal.on("*", (character, metadata) => {
 			// TODO: Debounce
 			this.emit("keypress", character);
 		});

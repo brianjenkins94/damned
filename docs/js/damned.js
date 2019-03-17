@@ -464,7 +464,7 @@ function unwrapListeners(arr) {
   return ret;
 }
 
-class UndrawableContainerNode extends EventEmitter {
+class UnstyledContainerNode extends EventEmitter {
     constructor() {
         super(...arguments);
         this.children = [];
@@ -473,6 +473,7 @@ class UndrawableContainerNode extends EventEmitter {
         for (let x = 0; x < this.children.length; x++) {
             this.children[x].refresh();
         }
+        this.draw();
     }
     append(element) {
         this.children.push(element);
@@ -931,7 +932,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
         super();
         this.rows = terminal.rows;
         this.columns = terminal.columns;
-        terminal.on("keypress", (character, metadata) => {
+        terminal.on("*", (character, metadata) => {
             // TODO: Debounce
             this.emit("keypress", character);
         });
@@ -981,19 +982,20 @@ class Node extends EventEmitter {
             // Sizing
             "rows": 0,
             "columns": 0,
-            // Positioning
+            // Margin
             "margin": {
                 "top": 0,
                 "right": 0,
                 "bottom": 0,
                 "left": 0
             },
+            // Border
             "border": {
                 "top": 0,
                 "right": 0,
                 "bottom": 0,
                 "left": 0,
-                // Style
+                // Border Style
                 "style": {
                     "top": "─",
                     "topRight": "┐",
@@ -1005,6 +1007,7 @@ class Node extends EventEmitter {
                     "topLeft": "┌"
                 }
             },
+            // Padding
             "padding": {
                 "top": 0,
                 "right": 0,
@@ -1039,30 +1042,38 @@ class Window extends ContainerNode {
         this.buffer = buffer;
         this.options = Object.assign({}, this.options, overrides);
     }
+    // Draw
     draw() {
-        this.buffer.cursorTo(0, 0);
-        this.buffer.write(this.options.border.style.topLeft);
-        for (let x = 1; x < this.buffer.columns - 1; x++) {
-            this.buffer.write(this.options.border.style.top);
+        // tslint:disable-next-line:no-this-assignment
+        let { buffer } = this;
+        let { title, margin, border } = this.options;
+        if (border !== undefined && border.style !== undefined) {
+            buffer.cursorTo(margin.left, margin.top);
+            buffer.write(border.style.topLeft);
+            for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
+                if (x === (margin.left + border.left) + Math.floor((buffer.columns - (margin.left + border.left + (margin.right + 1) + (border.right + 1))) / 2) - (title.length / 2)) {
+                    buffer.write(title);
+                    x += title.length + 1;
+                }
+                else {
+                    buffer.write(border.style.top);
+                }
+            }
+            buffer.write(border.style.topRight);
+            for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
+                buffer.cursorTo(margin.left, x);
+                buffer.write(border.style.left);
+                buffer.cursorTo(buffer.columns - (margin.right + 1), x);
+                buffer.write(border.style.right);
+            }
+            buffer.cursorTo(margin.left, buffer.rows - (margin.bottom + 1));
+            buffer.write(border.style.bottomLeft);
+            for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
+                buffer.write(border.style.bottom);
+            }
+            buffer.write(border.style.bottomRight);
+            buffer.cursorTo(buffer.columns, buffer.rows);
         }
-        this.buffer.write(this.options.border.style.topRight);
-        for (let x = 1; x < this.buffer.rows - 1; x++) {
-            this.buffer.cursorTo(0, x);
-            this.buffer.write(this.options.border.style.left);
-            this.buffer.cursorTo(this.buffer.columns - 1, x);
-            this.buffer.write(this.options.border.style.right);
-        }
-        this.buffer.cursorTo(0, this.buffer.rows);
-        this.buffer.write(this.options.border.style.bottomLeft);
-        for (let x = 1; x < this.buffer.columns - 1; x++) {
-            this.buffer.write(this.options.border.style.bottom);
-        }
-        this.buffer.write(this.options.border.style.bottomRight);
-        if (this.options.title !== undefined) {
-            this.buffer.cursorTo(Math.floor((this.buffer.columns / 2) - (this.options.title.length / 2)), 0);
-            this.buffer.write(this.options.title);
-        }
-        this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
     }
 }
 
@@ -1077,7 +1088,7 @@ class Box extends ContainerNode {
     }
 }
 
-class Program extends UndrawableContainerNode {
+class Program extends UnstyledContainerNode {
     // Initialization
     constructor(overrides) {
         super();
@@ -1096,16 +1107,8 @@ class Program extends UndrawableContainerNode {
             this.emit("keypress");
         });
         this.buffer.on("resize", () => {
-            super.refresh();
+            this.refresh();
         });
-        //fs.readdirSync(path.join(__dirname, "..", "widgets")).forEach((file) => {
-        //	if (fs.statSync(path.join(__dirname, "..", "widgets", file)).isFile()) {
-        //		let widgetName = file.substring(0, file.lastIndexOf("."));
-        //		let widgetConstructor = file[0].toUpperCase() + widgetName.substring(1);
-        //
-        //		this.register(widgetName, require(path.join("../widgets", file))[widgetConstructor]);
-        //	}
-        //});
         this.register("window", Window);
         this.register("box", Box);
     }
@@ -1116,47 +1119,13 @@ class Program extends UndrawableContainerNode {
     create(widgetName, overrides) {
         return new this.widgets[widgetName](this.buffer, overrides);
     }
-    // Append
-    append(window) {
-        this.children.push(window);
-        return window;
-    }
     // Register
     register(widgetName, widgetConstructor) {
         this.widgets[widgetName] = widgetConstructor;
     }
-    // Window
-    removeWindowByName(name) {
-        this.children.splice(this.getWindowIndexByName(name), 1);
-    }
-    getWindowByName(name) {
-        for (let x = 0; x < this.children.length; x++) {
-            if (this.children[x].getName() === name) {
-                return this.children[x];
-            }
-        }
-    }
-    bringWindowToFront(name) {
-        this.children.unshift(this.children.splice(this.getWindowIndexByName(name), 1)[0]);
-    }
-    sendWindowToBack(name) {
-        this.children.push(this.children.splice(this.getWindowIndexByName(name), 1)[0]);
-    }
-    bringWindowForward(name) {
-        let index = this.getWindowIndexByName(name);
-        this.children.splice(index - 1, 0, this.children.splice(index, 1)[0]);
-    }
-    sendWindowBackward(name) {
-        let index = this.getWindowIndexByName(name);
-        this.children.splice(index + 1, 0, this.children.splice(index, 1)[0]);
-    }
-    // Window Utilities
-    getWindowIndexByName(name) {
-        for (let x = 0; x < this.children.length; x++) {
-            if (this.children[x].getName() === name) {
-                return x;
-            }
-        }
+    // Draw
+    draw() {
+        this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
     }
 }
 
@@ -1166,6 +1135,35 @@ damned.on("C-c", function (event) {
     damned.destroy();
 });
 // Initialize a new Window
-let window$1 = damned.append(damned.create("window", { "title": " Grid " }));
-let box = window$1.append(damned.create("box"));
+let window$1 = damned.append(damned.create("window", {
+    "title": " Griid ",
+    "margin": {
+        "top": 6,
+        "right": 40,
+        "bottom": 6,
+        "left": 40
+    },
+    "border": {
+        "top": 1,
+        "right": 1,
+        "bottom": 1,
+        "left": 1,
+        "style": {
+            "top": "─",
+            "topRight": "┐",
+            "right": "│",
+            "bottomRight": "┘",
+            "bottom": "─",
+            "bottomLeft": "└",
+            "left": "│",
+            "topLeft": "┌"
+        }
+    },
+    "padding": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+    },
+}));
 window$1.refresh();

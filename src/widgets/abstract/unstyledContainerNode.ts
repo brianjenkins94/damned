@@ -1,12 +1,14 @@
 import { EventEmitter } from "events";
 
-abstract class UndrawableContainerNode extends EventEmitter {
+abstract class UnstyledContainerNode extends EventEmitter {
 	protected children = [];
 
 	public refresh() {
 		for (let x = 0; x < this.children.length; x++) {
 			this.children[x].refresh();
 		}
+
+		this.draw();
 	}
 
 	public append(element) {
@@ -14,6 +16,8 @@ abstract class UndrawableContainerNode extends EventEmitter {
 
 		return element;
 	}
+
+	public abstract draw();
 }
 
-export { UndrawableContainerNode };
+export { UnstyledContainerNode };

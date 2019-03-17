@@ -6,17 +6,13 @@ import * as tty from "tty";
 // Monkey-patch tty.d.ts
 declare module "tty" {
 	interface WriteStream {
-		clearLine(dir: number): void;
-		clearScreenDown(): void;
-		cursorTo(x: number, y: number): void;
-		getWindowSize(): void;
 		moveCursor(dx: number, dy: number): void;
 	}
 }
 
 class Terminal extends EventEmitter {
-	private input = process.stdin as tty.ReadStream; // new tty.ReadStream(0);
-	private output = process.stdout as tty.WriteStream; // new tty.WriteStream(1);
+	private input = process.stdin as tty.ReadStream;
+	private output = process.stdout as tty.WriteStream;
 
 	public rows = this.output.rows;
 	public columns = this.output.columns;
