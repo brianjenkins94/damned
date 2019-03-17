@@ -1,8 +1,11 @@
 import { ContainerNode } from "./abstract/containerNode";
 
+import * as uuid from "uuid";
+
 class Window extends ContainerNode {
-	private name;
 	private options = {
+		// Metadata
+		"name": uuid.v4(),
 		// Title
 		"title": "",
 		// Style
@@ -30,15 +33,10 @@ class Window extends ContainerNode {
 
 	// Initialization
 
-	public constructor(name, overrides?) {
+	public constructor(overrides?) {
 		super();
 
-		this.name = name;
 		this.options = { ...this.options, ...overrides };
-	}
-
-	public getName() {
-		return this.name;
 	}
 }
 

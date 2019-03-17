@@ -7,11 +7,7 @@ damned.on("C-c", function(event) {
 	damned.destroy();
 });
 
-// Initialize new Window
-let window = new Damned.Window("Grid");
+// Initialize a new Window
+let window = damned.append(damned.create("window", "Grid"));
 
-damned.append(window);
-
-let box = new Damned.Box();
-
-window.append(box);
+//let box = window.append(box);

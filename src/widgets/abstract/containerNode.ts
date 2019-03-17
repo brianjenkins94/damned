@@ -1,7 +1,7 @@
 import { Node } from "./node";
 
 class ContainerNode extends Node {
-	private children = [];
+	public children = [];
 
 	public refresh() {
 		for (let x = 0; x < this.children.length; x++) {
