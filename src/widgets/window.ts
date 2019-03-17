@@ -3,6 +3,7 @@ import { ContainerNode } from "./abstract/containerNode";
 import * as uuid from "uuid";
 
 class Window extends ContainerNode {
+	private buffer;
 	private options = {
 		// Metadata
 		"name": uuid.v4(),
@@ -33,10 +34,26 @@ class Window extends ContainerNode {
 
 	// Initialization
 
-	public constructor(overrides?) {
+	public constructor(buffer, overrides?) {
 		super();
 
+		this.buffer = buffer;
+
 		this.options = { ...this.options, ...overrides };
+	}
+
+	public draw() {
+		this.buffer.cursorTo(0, 0);
+
+		for (let x = 0; x < this.buffer.columns; x++) {
+			this.buffer.write("-");
+		}
+
+		this.buffer.cursorTo(0, this.buffer.rows);
+
+		for (let x = 0; x < this.buffer.columns; x++) {
+			this.buffer.write("_");
+		}
 	}
 }
 

@@ -1,11 +1,11 @@
-import { ContainerNode } from "../widgets/abstract/containerNode";
+import { UndrawableContainerNode } from "../widgets/abstract/undrawableContainerNode";
 
 import * as fs from "fs";
 import * as path from "path";
 
 import { buffer } from "./buffer";
 
-class Program extends ContainerNode {
+class Program extends UndrawableContainerNode {
 	private buffer = buffer;
 	private options = {
 		"useAlternateBuffer": true
@@ -20,14 +20,14 @@ class Program extends ContainerNode {
 		this.options = { ...this.options, ...overrides };
 
 		if (this.options["useAlternateBuffer"] === true) {
-			buffer.enableAlternateBuffer();
+			this.buffer.enableAlternateBuffer();
 		}
 
-		buffer.on("*", (type, sequence) => {
+		this.buffer.on("*", (type, sequence) => {
 			this.emit("keypress");
 		});
 
-		buffer.on("resize", () => {
+		this.buffer.on("resize", () => {
 			super.refresh();
 		});
 
@@ -42,7 +42,7 @@ class Program extends ContainerNode {
 	}
 
 	public destroy() {
-		buffer.disableAlternateBuffer();
+		this.buffer.disableAlternateBuffer();
 	}
 
 	// Create
@@ -53,7 +53,7 @@ class Program extends ContainerNode {
 
 	// Append
 
-	public append(window: Window, overrides?) {
+	public append(window) {
 		this.children.push(window);
 
 		return window;
@@ -61,8 +61,14 @@ class Program extends ContainerNode {
 
 	// Register
 
-	public register(widgetName, constructor) {
-		this.widgets[widgetName] = constructor;
+	public register(widgetName, widgetConstructor) {
+		this.widgets[widgetName] = widgetConstructor;
+	}
+
+	// Draw
+
+	public draw() {
+		// Nothing to draw
 	}
 
 	// Window

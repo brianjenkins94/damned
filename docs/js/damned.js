@@ -970,7 +970,7 @@ let buffer = new Buffer();
 
 class Window extends ContainerNode {
     // Initialization
-    constructor(name, overrides) {
+    constructor(name, overrides?) {
         super();
         this.options = {
             // Title
@@ -1010,7 +1010,7 @@ class Box extends ContainerNode {
 
 class Program extends ContainerNode {
     // Initialization
-    constructor(overrides) {
+    constructor(overrides?) {
         super();
         this.options = {
             "useAlternateBuffer": true

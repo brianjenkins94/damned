@@ -1,5 +1,7 @@
 import { EventEmitter } from "events";
 
-class Node extends EventEmitter {}
+abstract class Node extends EventEmitter {
+	public abstract draw();
+}
 
 export { Node };

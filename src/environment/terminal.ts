@@ -1,5 +1,8 @@
 import { EventEmitter } from "events";
 
+import * as readline from "readline";
+import * as tty from "tty";
+
 // Monkey-patch tty.d.ts
 declare module "tty" {
 	interface WriteStream {
@@ -10,9 +13,6 @@ declare module "tty" {
 		moveCursor(dx: number, dy: number): void;
 	}
 }
-
-import * as readline from "readline";
-import * as tty from "tty";
 
 class Terminal extends EventEmitter {
 	private input = process.stdin as tty.ReadStream; // new tty.ReadStream(0);

@@ -13,6 +13,8 @@ class MonkeyPatchedEventEmitter extends EventEmitter {
 }
 
 class Buffer extends MonkeyPatchedEventEmitter {
+	public rows = terminal.rows;
+	public columns = terminal.columns;
 
 	// Initialization
 
@@ -20,6 +22,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 		super();
 
 		terminal.on("keypress", (character, metadata) => {
+			// TODO: Debounce
 			this.emit("keypress", character);
 		});
 
@@ -60,7 +63,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 		terminal.moveCursor(dx, dy);
 	}
 
-	public write(text) {
+	public write(text = "") {
 		terminal.write(text);
 	}
 }
