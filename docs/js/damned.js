@@ -857,6 +857,7 @@ class Browser extends EventEmitter {
         this.rows = xtermJs.rows;
         this.columns = xtermJs.cols;
         xtermJs.attachCustomKeyEventHandler((event) => {
+            // TODO: Debonuce
             if (event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
                 this.emit("keypress", event.key, {
                     "name": event.key.toLowerCase(),
@@ -932,9 +933,9 @@ class Buffer extends MonkeyPatchedEventEmitter {
         super();
         this.rows = terminal.rows;
         this.columns = terminal.columns;
-        terminal.on("*", (character, metadata) => {
-            // TODO: Debounce
-            this.emit("keypress", character);
+        terminal.on("keypress", (character, metadata) => {
+            // Emit things like C-c
+            this.emit("keypress", "C-c");
         });
         terminal.on("resize", () => {
             this.emit("resize");
@@ -1051,13 +1052,7 @@ class Window extends ContainerNode {
             buffer.cursorTo(margin.left, margin.top);
             buffer.write(border.style.topLeft);
             for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
-                if (x === (margin.left + border.left) + Math.floor((buffer.columns - (margin.left + border.left + (margin.right + 1) + (border.right + 1))) / 2) - (title.length / 2)) {
-                    buffer.write(title);
-                    x += title.length + 1;
-                }
-                else {
-                    buffer.write(border.style.top);
-                }
+                buffer.write(border.style.top);
             }
             buffer.write(border.style.topRight);
             for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
@@ -1103,8 +1098,8 @@ class Program extends UnstyledContainerNode {
             this.buffer.cursorTo(0, 0);
             this.buffer.clearScreenDown();
         }
-        this.buffer.on("*", (type, sequence) => {
-            this.emit("keypress");
+        this.buffer.on("*", (type, ...args) => {
+            this.emit(type, ...args);
         });
         this.buffer.on("resize", () => {
             this.refresh();
@@ -1136,11 +1131,11 @@ damned.on("C-c", function (event) {
 });
 // Initialize a new Window
 let window$1 = damned.append(damned.create("window", {
-    "title": " Griid ",
+    "title": " Grid ",
     "margin": {
-        "top": 6,
+        "top": 4,
         "right": 40,
-        "bottom": 6,
+        "bottom": 4,
         "left": 40
     },
     "border": {

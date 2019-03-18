@@ -28,8 +28,8 @@ class Program extends UnstyledContainerNode {
 			this.buffer.clearScreenDown();
 		}
 
-		this.buffer.on("*", (type, sequence) => {
-			this.emit("keypress");
+		this.buffer.on("*", (type, ...args) => {
+			this.emit(type, ...args);
 		});
 
 		this.buffer.on("resize", () => {
