@@ -13,8 +13,7 @@ class Browser extends EventEmitter {
 		super();
 
 		xtermJs.attachCustomKeyEventHandler((event) => {
-			// TODO: Debonuce
-			if (event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
+			if (event.type === "keydown" && event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
 				this.emit("keypress", event.key, {
 					"name": event.key.toLowerCase(),
 					"ctrl": event.ctrlKey,
