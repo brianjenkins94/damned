@@ -14,13 +14,22 @@ export default {
 		nodeResolve(),
 		commonJs({
 			"namedExports": {
-				"ansi-escapes": ["eraseStartLine", "eraseEndLine", "eraseLine", "eraseDown", "clearScreenDown", "cursorTo", "cursorMove"]
+				"ansi-escapes": [
+					"eraseStartLine",
+					"eraseEndLine",
+					"eraseLine",
+					"eraseDown",
+					"clearScreenDown",
+					"cursorTo",
+					"cursorMove"
+				]
 			}
 		}),
 		nodeBuiltins(),
 		nodeGlobals(),
 		typescript({
-			"target": "ES2015"
+			"target": "ES2015",
+			"sourceMap": false
 		})
 	],
 	"watch": {

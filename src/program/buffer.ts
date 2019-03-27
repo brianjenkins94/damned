@@ -3,6 +3,7 @@
 import { EventEmitter } from "events";
 
 import { terminal } from "../environment";
+import { emitKeys } from "./keys";
 
 class MonkeyPatchedEventEmitter extends EventEmitter {
 	public emit(type, ...args): any {
@@ -22,19 +23,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 		super();
 
 		terminal.on("keypress", (character, metadata) => {
-			console.log(character, metadata);
-
-			// Probably should look to see how blessed handles this.
-			// https://github.com/chjj/blessed/blob/master/lib/keys.js#L134
-			if (metadata["ctrl"] === true) {
-				return this.emit("keypress", "C-" + character);
-			} else if (metadata["shift"] === true) {
-				return this.emit("keypress", "S-" + character);
-			} else if (metadata["meta"] === true) {
-				return this.emit("keypress", "M-" + character);
-			} else {
-				return this.emit("keypress", character);
-			}
+			return emitKeys(this, character);
 		});
 
 		terminal.on("resize", () => {

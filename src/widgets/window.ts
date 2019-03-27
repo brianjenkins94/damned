@@ -1,5 +1,7 @@
 import { ContainerNode } from "./abstract/containerNode";
 
+import { merge } from "../utilities";
+
 class Window extends ContainerNode {
 	private buffer;
 
@@ -10,7 +12,7 @@ class Window extends ContainerNode {
 
 		this.buffer = buffer;
 
-		this.options = { ...this.options, ...overrides };
+		this.options = merge(this.options, overrides);
 	}
 
 	// Draw
