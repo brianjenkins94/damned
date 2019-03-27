@@ -24,9 +24,6 @@ class Terminal extends EventEmitter {
 
 		this.input.setRawMode(true);
 
-		// Unclear if this is necessary
-		this.input.resume();
-
 		this.input.on("keypress", (ch, key) => {
 			this.emit("keypress", ch, key);
 		});

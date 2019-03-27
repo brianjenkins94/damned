@@ -5,6 +5,8 @@ let damned = new Damned();
 // Register events
 damned.on("C-c", function(event) {
 	damned.destroy();
+
+	process.exit(0);
 });
 
 // Initialize a new Window

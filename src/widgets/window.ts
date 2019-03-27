@@ -1,5 +1,7 @@
 import { ContainerNode } from "./abstract/containerNode";
 
+import * as merge from "lodash.merge";
+
 class Window extends ContainerNode {
 	private buffer;
 
@@ -10,7 +12,7 @@ class Window extends ContainerNode {
 
 		this.buffer = buffer;
 
-		this.options = { ...this.options, ...overrides };
+		this.options = merge(this.options, overrides);
 	}
 
 	// Draw
@@ -26,6 +28,7 @@ class Window extends ContainerNode {
 			buffer.write(border.style.topLeft);
 
 			for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
+				// TODO: Write title
 				buffer.write(border.style.top);
 			}
 

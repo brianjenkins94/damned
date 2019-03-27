@@ -1,5 +1,7 @@
 import { UnstyledContainerNode } from "../widgets/abstract/unstyledContainerNode";
 
+import * as merge from "lodash.merge";
+
 import { buffer } from "./buffer";
 
 // Widgets
@@ -18,7 +20,7 @@ class Program extends UnstyledContainerNode {
 	public constructor(overrides?) {
 		super();
 
-		this.options = { ...this.options, ...overrides };
+		this.options = merge(this.options, overrides);
 
 		if (this.options["useAlternateBuffer"] === true) {
 			this.buffer.enableAlternateBuffer();
