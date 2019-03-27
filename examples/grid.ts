@@ -39,7 +39,7 @@ let window = damned.append(damned.create("window", {
 		"right": 0,
 		"bottom": 0,
 		"left": 0
-	},
+	}
 }));
 
 window.refresh();
