@@ -1,5 +1,3 @@
-// tslint:disable:max-classes-per-file
-
 import { EventEmitter } from "events";
 
 import { terminal } from "../environment";
@@ -13,6 +11,7 @@ class MonkeyPatchedEventEmitter extends EventEmitter {
 	}
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class Buffer extends MonkeyPatchedEventEmitter {
 	public rows = terminal.rows;
 	public columns = terminal.columns;
@@ -22,12 +21,12 @@ class Buffer extends MonkeyPatchedEventEmitter {
 	public constructor() {
 		super();
 
-		terminal.on("keypress", (character, metadata) => {
-			return emitKeys(this, character);
+		terminal.on("keypress", (ch, key) => {
+			emitKeys(this, ch, key);
 		});
 
 		terminal.on("resize", () => {
-			return this.emit("resize");
+			this.emit("resize");
 		});
 	}
 

@@ -25,11 +25,11 @@ class Terminal extends EventEmitter {
 		this.input.setRawMode(true);
 
 		this.input.on("keypress", (ch, key) => {
-			return this.emit("keypress", ch, key);
+			this.emit("keypress", ch, key);
 		});
 
 		this.output.on("resize", () => {
-			return this.emit("resize");
+			this.emit("resize");
 		});
 	}
 

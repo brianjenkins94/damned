@@ -30,7 +30,7 @@ class Program extends UnstyledContainerNode {
 		}
 
 		this.buffer.on("*", (type, ...args) => {
-			return this.emit(type, ...args);
+			this.emit(type, ...args);
 		});
 
 		this.buffer.on("resize", () => {

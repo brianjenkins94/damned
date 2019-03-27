@@ -1,6 +1,13 @@
 import { EventEmitter } from "events";
 
-abstract class UnstyledContainerNode extends EventEmitter {
+class MonkeyPatchedEventEmitter extends EventEmitter {
+	public emit(type, ...args): any {
+		super.emit("*", ...args);
+	}
+}
+
+// tslint:disable-next-line:max-classes-per-file
+abstract class UnstyledContainerNode extends MonkeyPatchedEventEmitter {
 	protected children = [];
 
 	public refresh() {
