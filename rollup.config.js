@@ -2,13 +2,13 @@ import commonJs from "rollup-plugin-commonjs";
 import nodeBuiltins from "rollup-plugin-node-builtins";
 import nodeGlobals from "rollup-plugin-node-globals";
 import nodeResolve from "rollup-plugin-node-resolve";
-import typescript from "rollup-plugin-typescript2";
+import typescript from "rollup-plugin-typescript";
 
 export default {
 	"input": "examples/grid.ts",
 	"output": {
 		"file": "docs/js/damned.js",
-		"format": "es"
+		"format": "esm"
 	},
 	"plugins": [
 		nodeResolve(),
@@ -20,12 +20,7 @@ export default {
 		nodeBuiltins(),
 		nodeGlobals(),
 		typescript({
-			"tsconfigOverride": {
-				"compilerOptions": {
-					"module": "esNext",
-					"target": "ES2015"
-				}
-			}
+			"target": "ES2015"
 		})
 	],
 	"watch": {

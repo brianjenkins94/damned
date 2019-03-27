@@ -5,6 +5,7 @@
 	],
 	"jsRules": {
 		"align": [true, "elements", "members", "parameters", "statements"],
+		"arrow-return-shorthand": false,
 		"comment-format": false,
 		"completed-docs": false,
 		"indent": [true, "tabs"],
@@ -33,6 +34,7 @@
 	},
 	"rules": {
 		"align": [true, "elements", "members", "parameters", "statements"],
+		"arrow-return-shorthand": false,
 		"comment-format": false,
 		"completed-docs": false,
 		"indent": [true, "tabs"],

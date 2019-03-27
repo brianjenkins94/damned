@@ -14,8 +14,8 @@ class Browser extends EventEmitter {
 
 		xtermJs.attachCustomKeyEventHandler((event) => {
 			if (event.type === "keydown" && event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
-				this.emit("keypress", event.key, {
-					"name": event.key.toLowerCase(),
+				return this.emit("keypress", event.key, {
+					"name": event.key,
 					"ctrl": event.ctrlKey,
 					"meta": event.metaKey,
 					"shift": event.shiftKey
@@ -24,7 +24,7 @@ class Browser extends EventEmitter {
 		});
 
 		xtermJs.on("resize", () => {
-			this.emit("resize");
+			return this.emit("resize");
 		});
 	}
 

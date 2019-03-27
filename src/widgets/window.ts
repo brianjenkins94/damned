@@ -1,7 +1,5 @@
 import { ContainerNode } from "./abstract/containerNode";
 
-import * as merge from "lodash.merge";
-
 class Window extends ContainerNode {
 	private buffer;
 
@@ -12,7 +10,7 @@ class Window extends ContainerNode {
 
 		this.buffer = buffer;
 
-		this.options = merge(this.options, overrides);
+		this.options = { ...this.options, ...overrides };
 	}
 
 	// Draw

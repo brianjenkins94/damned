@@ -858,8 +858,8 @@ class Browser extends EventEmitter {
         this.columns = xtermJs.cols;
         xtermJs.attachCustomKeyEventHandler((event) => {
             if (event.type === "keydown" && event.key !== "Control" && event.key !== "Alt" && event.key !== "Meta" && event.key !== "Shift") {
-                this.emit("keypress", event.key, {
-                    "name": event.key.toLowerCase(),
+                return this.emit("keypress", event.key, {
+                    "name": event.key,
                     "ctrl": event.ctrlKey,
                     "meta": event.metaKey,
                     "shift": event.shiftKey
@@ -867,7 +867,7 @@ class Browser extends EventEmitter {
             }
         });
         xtermJs.on("resize", () => {
-            this.emit("resize");
+            return this.emit("resize");
         });
     }
     clearLine(direction) {
@@ -933,11 +933,24 @@ class Buffer extends MonkeyPatchedEventEmitter {
         this.rows = terminal.rows;
         this.columns = terminal.columns;
         terminal.on("keypress", (character, metadata) => {
-            // Emit things like C-c
-            this.emit("keypress", "C-c");
+            console.log(character, metadata);
+            // Probably should look to see how blessed handles this.
+            // https://github.com/chjj/blessed/blob/master/lib/keys.js#L134
+            if (metadata["ctrl"] === true) {
+                return this.emit("keypress", "C-" + character);
+            }
+            else if (metadata["shift"] === true) {
+                return this.emit("keypress", "S-" + character);
+            }
+            else if (metadata["meta"] === true) {
+                return this.emit("keypress", "M-" + character);
+            }
+            else {
+                return this.emit("keypress", character);
+            }
         });
         terminal.on("resize", () => {
-            this.emit("resize");
+            return this.emit("resize");
         });
     }
     // Alternate buffer
@@ -1051,7 +1064,13 @@ class Window extends ContainerNode {
             buffer.cursorTo(margin.left, margin.top);
             buffer.write(border.style.topLeft);
             for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
-                buffer.write(border.style.top);
+                if (x === (margin.left + border.left) + Math.floor(((buffer.columns - (margin.right + 1) - (margin.left + border.left)) / 2) - (title.length / 2))) {
+                    buffer.write(title);
+                    x += title.length - 1;
+                }
+                else {
+                    buffer.write(border.style.top);
+                }
             }
             buffer.write(border.style.topRight);
             for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
@@ -1098,7 +1117,7 @@ class Program extends UnstyledContainerNode {
             this.buffer.clearScreenDown();
         }
         this.buffer.on("*", (type, ...args) => {
-            this.emit(type, ...args);
+            return this.emit(type, ...args);
         });
         this.buffer.on("resize", () => {
             this.refresh();
@@ -1127,6 +1146,7 @@ let damned = new Program();
 // Register events
 damned.on("C-c", function (event) {
     damned.destroy();
+    process.exit(0);
 });
 // Initialize a new Window
 let window$1 = damned.append(damned.create("window", {
@@ -1158,6 +1178,6 @@ let window$1 = damned.append(damned.create("window", {
         "right": 0,
         "bottom": 0,
         "left": 0
-    },
+    }
 }));
 window$1.refresh();

@@ -22,12 +22,23 @@ class Buffer extends MonkeyPatchedEventEmitter {
 		super();
 
 		terminal.on("keypress", (character, metadata) => {
-			// Emit things like C-c
-			this.emit("keypress", "C-c");
+			console.log(character, metadata);
+
+			// Probably should look to see how blessed handles this.
+			// https://github.com/chjj/blessed/blob/master/lib/keys.js#L134
+			if (metadata["ctrl"] === true) {
+				return this.emit("keypress", "C-" + character);
+			} else if (metadata["shift"] === true) {
+				return this.emit("keypress", "S-" + character);
+			} else if (metadata["meta"] === true) {
+				return this.emit("keypress", "M-" + character);
+			} else {
+				return this.emit("keypress", character);
+			}
 		});
 
 		terminal.on("resize", () => {
-			this.emit("resize");
+			return this.emit("resize");
 		});
 	}
 
