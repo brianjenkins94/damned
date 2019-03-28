@@ -1,5 +1,5 @@
 // tslint:disable-next-line:cyclomatic-complexity
-export function emitKeys(buffer, ch, key) {
+export function emitKeys(buffer, ch = "", key) {
 	if (ch.toLowerCase() === "return") {
 		buffer.emit("keypress", "return", key);
 	} else if (ch.toLowerCase() === "enter") {
@@ -36,11 +36,11 @@ export function emitKeys(buffer, ch, key) {
 		buffer.emit("keypress", "pagedown", key);
 	} else {
 		if (key["ctrl"] === true) {
-			return buffer.emit("keypress", "C-" + ch, key);
+			buffer.emit("keypress", "C-" + key.name, key);
 		} else if (key["meta"] === true) {
-			return buffer.emit("keypress", "M-" + ch, key);
+			buffer.emit("keypress", "M-" + key.name, key);
 		} else {
-			return buffer.emit("keypress", ch.toLowerCase(), key);
+			buffer.emit("keypress", key.name.toLowerCase(), key);
 		}
 	}
 }

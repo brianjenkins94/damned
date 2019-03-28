@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 class MonkeyPatchedEventEmitter extends EventEmitter {
 	public emit(type, ...args): any {
 		super.emit("*", ...args);
+		super.emit(type, ...args);
 	}
 }
 

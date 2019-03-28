@@ -467,6 +467,7 @@ function unwrapListeners(arr) {
 class MonkeyPatchedEventEmitter extends EventEmitter {
     emit(type, ...args) {
         super.emit("*", ...args);
+        super.emit(type, ...args);
     }
 }
 // tslint:disable-next-line:max-classes-per-file
@@ -925,7 +926,7 @@ let Environment = typeof (process) !== "undefined" ? require("./terminal").Termi
 let terminal = new Environment();
 
 // tslint:disable-next-line:cyclomatic-complexity
-function emitKeys(buffer, ch, key) {
+function emitKeys(buffer, ch = "", key) {
     if (ch.toLowerCase() === "return") {
         buffer.emit("keypress", "return", key);
     }
@@ -979,13 +980,13 @@ function emitKeys(buffer, ch, key) {
     }
     else {
         if (key["ctrl"] === true) {
-            return buffer.emit("keypress", "C-" + ch, key);
+            buffer.emit("keypress", "C-" + key.name, key);
         }
         else if (key["meta"] === true) {
-            return buffer.emit("keypress", "M-" + ch, key);
+            buffer.emit("keypress", "M-" + key.name, key);
         }
         else {
-            return buffer.emit("keypress", ch.toLowerCase(), key);
+            buffer.emit("keypress", key.name.toLowerCase(), key);
         }
     }
 }
