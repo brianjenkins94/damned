@@ -718,15 +718,17 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var ansiEscapes = createCommonjsModule(function (module) {
-const x = module.exports;
+var ansiEscapes_1 = createCommonjsModule(function (module) {
+const ansiEscapes = module.exports;
+// TODO: remove this in the next major version
+module.exports.default = ansiEscapes;
+
 const ESC = '\u001B[';
 const OSC = '\u001B]';
 const BEL = '\u0007';
 const SEP = ';';
-const isTerminalApp = process$1.env.TERM_PROGRAM === 'Apple_Terminal';
 
-x.cursorTo = (x, y) => {
+ansiEscapes.cursorTo = (x, y) => {
 	if (typeof x !== 'number') {
 		throw new TypeError('The `x` argument is required');
 	}
@@ -738,7 +740,7 @@ x.cursorTo = (x, y) => {
 	return ESC + (y + 1) + ';' + (x + 1) + 'H';
 };
 
-x.cursorMove = (x, y) => {
+ansiEscapes.cursorMove = (x, y) => {
 	if (typeof x !== 'number') {
 		throw new TypeError('The `x` argument is required');
 	}
@@ -760,56 +762,50 @@ x.cursorMove = (x, y) => {
 	return ret;
 };
 
-x.cursorUp = count => ESC + (typeof count === 'number' ? count : 1) + 'A';
-x.cursorDown = count => ESC + (typeof count === 'number' ? count : 1) + 'B';
-x.cursorForward = count => ESC + (typeof count === 'number' ? count : 1) + 'C';
-x.cursorBackward = count => ESC + (typeof count === 'number' ? count : 1) + 'D';
+ansiEscapes.cursorUp = (count = 1) => ESC + count + 'A';
+ansiEscapes.cursorDown = (count = 1) => ESC + count + 'B';
+ansiEscapes.cursorForward = (count = 1) => ESC + count + 'C';
+ansiEscapes.cursorBackward = (count = 1) => ESC + count + 'D';
 
-x.cursorLeft = ESC + 'G';
-x.cursorSavePosition = ESC + (isTerminalApp ? '7' : 's');
-x.cursorRestorePosition = ESC + (isTerminalApp ? '8' : 'u');
-x.cursorGetPosition = ESC + '6n';
-x.cursorNextLine = ESC + 'E';
-x.cursorPrevLine = ESC + 'F';
-x.cursorHide = ESC + '?25l';
-x.cursorShow = ESC + '?25h';
+ansiEscapes.cursorLeft = ESC + 'G';
+ansiEscapes.cursorSavePosition = ESC + ('s');
+ansiEscapes.cursorRestorePosition = ESC + ('u');
+ansiEscapes.cursorGetPosition = ESC + '6n';
+ansiEscapes.cursorNextLine = ESC + 'E';
+ansiEscapes.cursorPrevLine = ESC + 'F';
+ansiEscapes.cursorHide = ESC + '?25l';
+ansiEscapes.cursorShow = ESC + '?25h';
 
-x.eraseLines = count => {
+ansiEscapes.eraseLines = count => {
 	let clear = '';
 
 	for (let i = 0; i < count; i++) {
-		clear += x.eraseLine + (i < count - 1 ? x.cursorUp() : '');
+		clear += ansiEscapes.eraseLine + (i < count - 1 ? ansiEscapes.cursorUp() : '');
 	}
 
 	if (count) {
-		clear += x.cursorLeft;
+		clear += ansiEscapes.cursorLeft;
 	}
 
 	return clear;
 };
 
-x.eraseEndLine = ESC + 'K';
-x.eraseStartLine = ESC + '1K';
-x.eraseLine = ESC + '2K';
-x.eraseDown = ESC + 'J';
-x.eraseUp = ESC + '1J';
-x.eraseScreen = ESC + '2J';
-x.scrollUp = ESC + 'S';
-x.scrollDown = ESC + 'T';
+ansiEscapes.eraseEndLine = ESC + 'K';
+ansiEscapes.eraseStartLine = ESC + '1K';
+ansiEscapes.eraseLine = ESC + '2K';
+ansiEscapes.eraseDown = ESC + 'J';
+ansiEscapes.eraseUp = ESC + '1J';
+ansiEscapes.eraseScreen = ESC + '2J';
+ansiEscapes.scrollUp = ESC + 'S';
+ansiEscapes.scrollDown = ESC + 'T';
 
-x.clearScreen = '\u001Bc';
+ansiEscapes.clearScreen = '\u001Bc';
 
-x.clearTerminal = process$1.platform === 'win32' ?
-	`${x.eraseScreen}${ESC}0f` :
-	// 1. Erases the screen (Only done in case `2` is not supported)
-	// 2. Erases the whole screen including scrollback buffer
-	// 3. Moves cursor to the top-left position
-	// More info: https://www.real-world-systems.com/docs/ANSIcode.html
-	`${x.eraseScreen}${ESC}3J${ESC}H`;
+ansiEscapes.clearTerminal = `${ansiEscapes.eraseScreen}${ESC}3J${ESC}H`;
 
-x.beep = BEL;
+ansiEscapes.beep = BEL;
 
-x.link = (text, url) => {
+ansiEscapes.link = (text, url) => {
 	return [
 		OSC,
 		'8',
@@ -826,37 +822,35 @@ x.link = (text, url) => {
 	].join('');
 };
 
-x.image = (buf, opts) => {
-	opts = opts || {};
+ansiEscapes.image = (buffer, options = {}) => {
+	let ret = `${OSC}1337;File=inline=1`;
 
-	let ret = OSC + '1337;File=inline=1';
-
-	if (opts.width) {
-		ret += `;width=${opts.width}`;
+	if (options.width) {
+		ret += `;width=${options.width}`;
 	}
 
-	if (opts.height) {
-		ret += `;height=${opts.height}`;
+	if (options.height) {
+		ret += `;height=${options.height}`;
 	}
 
-	if (opts.preserveAspectRatio === false) {
+	if (options.preserveAspectRatio === false) {
 		ret += ';preserveAspectRatio=0';
 	}
 
-	return ret + ':' + buf.toString('base64') + BEL;
+	return ret + ':' + buffer.toString('base64') + BEL;
 };
 
-x.iTerm = {};
-
-x.iTerm.setCwd = cwd => OSC + '50;CurrentDir=' + (cwd || process$1.cwd()) + BEL;
+ansiEscapes.iTerm = {
+	setCwd: (cwd = process$1.cwd()) => `${OSC}50;CurrentDir=${cwd}${BEL}`
+};
 });
-var ansiEscapes_1 = ansiEscapes.eraseStartLine;
-var ansiEscapes_2 = ansiEscapes.eraseEndLine;
-var ansiEscapes_3 = ansiEscapes.eraseLine;
-var ansiEscapes_4 = ansiEscapes.eraseDown;
-var ansiEscapes_5 = ansiEscapes.clearScreenDown;
-var ansiEscapes_6 = ansiEscapes.cursorTo;
-var ansiEscapes_7 = ansiEscapes.cursorMove;
+var ansiEscapes_2 = ansiEscapes_1.eraseStartLine;
+var ansiEscapes_3 = ansiEscapes_1.eraseEndLine;
+var ansiEscapes_4 = ansiEscapes_1.eraseLine;
+var ansiEscapes_5 = ansiEscapes_1.eraseDown;
+var ansiEscapes_6 = ansiEscapes_1.clearScreenDown;
+var ansiEscapes_7 = ansiEscapes_1.cursorTo;
+var ansiEscapes_8 = ansiEscapes_1.cursorMove;
 
 class Browser extends EventEmitter {
     constructor() {
@@ -880,20 +874,20 @@ class Browser extends EventEmitter {
     clearLine(direction) {
         switch (direction) {
             case -1:
-                xtermJs.write(ansiEscapes_1);
-                break;
-            case 1:
                 xtermJs.write(ansiEscapes_2);
                 break;
-            case 0:
+            case 1:
                 xtermJs.write(ansiEscapes_3);
+                break;
+            case 0:
+                xtermJs.write(ansiEscapes_4);
                 break;
             default:
                 throw new SyntaxError("missing formal parameter (direction)");
         }
     }
     clearScreenDown() {
-        xtermJs.write(ansiEscapes_4);
+        xtermJs.write(ansiEscapes_5);
     }
     cursorTo(x, y) {
         if (x === undefined) {
@@ -902,7 +896,7 @@ class Browser extends EventEmitter {
         if (y === undefined) {
             throw new SyntaxError("missing formal parameter (y)");
         }
-        xtermJs.write(ansiEscapes_6(x, y));
+        xtermJs.write(ansiEscapes_7(x, y));
     }
     getWindowSize() {
         return [this.columns, this.rows];
@@ -914,7 +908,7 @@ class Browser extends EventEmitter {
         if (dy === undefined) {
             throw new SyntaxError("missing formal parameter (y)");
         }
-        xtermJs.write(ansiEscapes_7(dx, dy));
+        xtermJs.write(ansiEscapes_8(dx, dy));
     }
     write(text) {
         xtermJs.write(text);
@@ -1005,38 +999,76 @@ class Buffer extends MonkeyPatchedEventEmitter$1 {
         super();
         this.rows = terminal.rows;
         this.columns = terminal.columns;
+        this.buffer = new Array(this.rows).fill(" ").map(() => new Array(this.columns).fill(" "));
+        this.cursor = {
+            "x": 0,
+            "y": 0
+        };
         terminal.on("keypress", (ch, key) => {
             emitKeys(this, ch, key);
         });
         terminal.on("resize", () => {
+            this.rows = terminal.rows;
+            this.columns = terminal.columns;
+            this.buffer = new Array(this.rows).fill(" ").map(() => new Array(this.columns).fill(" "));
             this.emit("resize");
         });
     }
     // Alternate buffer
     enableAlternateBuffer() {
-        buffer.write("\u001B[?1049h");
+        terminal.write("\u001B[?1049h");
     }
     disableAlternateBuffer() {
-        buffer.write("\u001B]?1049h");
+        terminal.write("\u001B]?1049h");
     }
     // Terminal
     clearLine(direction) {
-        terminal.clearLine(direction);
+        switch (direction) {
+            case -1:
+                this.moveCursor(0, this.cursor.y);
+                this.write(" ".repeat(this.cursor.x));
+                break;
+            case 1:
+                this.write(" ".repeat(this.columns - this.cursor.x));
+                break;
+            case 0:
+                this.moveCursor(0, this.cursor.y);
+                this.write(" ".repeat(this.columns));
+                break;
+            default:
+                throw new SyntaxError("missing formal parameter (direction)");
+        }
     }
     clearScreenDown() {
-        terminal.clearScreenDown();
+        this.write(" ".repeat((this.columns - this.cursor.x) + ((this.rows - 1) * this.columns)));
     }
     cursorTo(x, y) {
-        terminal.cursorTo(x, y);
+        this.cursor = {
+            "x": x,
+            "y": y
+        };
     }
     getWindowSize() {
-        terminal.getWindowSize();
+        return [this.columns, this.rows];
     }
     moveCursor(dx, dy) {
-        terminal.moveCursor(dx, dy);
+        // FIXME: Does not line wrap
+        this.cursor.x += dx;
+        this.cursor.y += dy;
     }
     write(text = "") {
-        terminal.write(text);
+        // TODO: Optimize
+        for (let x = 0; x < text.length; x++, this.cursor.x += 1) {
+            if (this.cursor.x === this.columns) {
+                this.cursorTo(this.cursor.y += 1, 0);
+            }
+            this.buffer[this.cursor.y][this.cursor.x] = text[x];
+        }
+    }
+    // Buffer
+    flush() {
+        terminal.cursorTo(0, 0);
+        terminal.write(this.buffer.flat().join(""));
     }
 }
 let buffer = new Buffer();
@@ -1134,6 +1166,7 @@ class Window extends ContainerNode {
         if (border !== undefined && border.style !== undefined) {
             buffer.cursorTo(margin.left, margin.top);
             buffer.write(border.style.topLeft);
+            // TODO: Try a more mathy approach
             for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
                 if (x === (margin.left + border.left) + Math.floor(((buffer.columns - (margin.right + 1) - (margin.left + border.left)) / 2) - (title.length / 2))) {
                     buffer.write(title);
@@ -1144,6 +1177,7 @@ class Window extends ContainerNode {
                 }
             }
             buffer.write(border.style.topRight);
+            // TODO: Try a more mathy approach
             for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
                 buffer.cursorTo(margin.left, x);
                 buffer.write(border.style.left);
@@ -1152,6 +1186,7 @@ class Window extends ContainerNode {
             }
             buffer.cursorTo(margin.left, buffer.rows - (margin.bottom + 1));
             buffer.write(border.style.bottomLeft);
+            // TODO: Try a more mathy approach
             for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
                 buffer.write(border.style.bottom);
             }
@@ -1209,7 +1244,7 @@ class Program extends UnstyledContainerNode {
     }
     // Draw
     draw() {
-        this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
+        this.buffer.flush();
     }
 }
 
@@ -1251,4 +1286,4 @@ let window$1 = damned.append(damned.create("window", {
         "left": 0
     }
 }));
-window$1.refresh();
+damned.refresh();

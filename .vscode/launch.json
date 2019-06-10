@@ -16,7 +16,7 @@
 				"${workspaceFolder}/examples/grid.ts",
 			],
 			"env": {
-				"TS_NODE_COMPILER_OPTIONS": "{\"target\":\"ES2015\"}"
+				"TS_NODE_COMPILER_OPTIONS": "{\"target\":\"ESNext\"}"
 			},
 			"skipFiles": [
 				"${workspaceRoot}/node_modules/**/*.js",

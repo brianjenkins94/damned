@@ -27,7 +27,7 @@ class Window extends ContainerNode {
 
 			buffer.write(border.style.topLeft);
 
-			let count = 0;
+			// TODO: Try a more mathy approach
 			for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
 				if (x === (margin.left + border.left) + Math.floor(((buffer.columns - (margin.right + 1) - (margin.left + border.left)) / 2) - (title.length / 2))) {
 					buffer.write(title);
@@ -40,6 +40,7 @@ class Window extends ContainerNode {
 
 			buffer.write(border.style.topRight);
 
+			// TODO: Try a more mathy approach
 			for (let x = margin.top + 1; x < buffer.rows - (margin.bottom + 1); x++) {
 				buffer.cursorTo(margin.left, x);
 
@@ -54,6 +55,7 @@ class Window extends ContainerNode {
 
 			buffer.write(border.style.bottomLeft);
 
+			// TODO: Try a more mathy approach
 			for (let x = margin.left + border.left; x < buffer.columns - (margin.right + 1); x++) {
 				buffer.write(border.style.bottom);
 			}

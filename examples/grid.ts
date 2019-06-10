@@ -42,4 +42,4 @@ let window = damned.append(damned.create("window", {
 	}
 }));
 
-window.refresh();
+damned.refresh();

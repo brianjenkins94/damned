@@ -60,7 +60,7 @@ class Program extends UnstyledContainerNode {
 	// Draw
 
 	public draw() {
-		this.buffer.cursorTo(this.buffer.columns, this.buffer.rows);
+		this.buffer.flush();
 	}
 }
 

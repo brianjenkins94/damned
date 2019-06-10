@@ -28,7 +28,7 @@ export default {
 		nodeBuiltins(),
 		nodeGlobals(),
 		typescript({
-			"target": "ES2015",
+			"target": "ESNext",
 			"sourceMap": false
 		})
 	],
