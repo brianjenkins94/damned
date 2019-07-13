@@ -28,7 +28,6 @@
 		"no-tabs": ["warn", { "allowIndentationTabs": true }], // No tabs, excluding indentation
 		"object-curly-spacing": ["warn", "always", { "arraysInObjects": false }], // Objects should always be padded with spaces
 		"object-property-newline": ["warn", { "allowAllPropertiesOnSameLine": true }], // Per-object consistent formatting
-		"sort-keys": ["warn", "asc", { "minKeys": 0 }], // Sort keys
 		"space-before-function-paren": ["warn", "never"], // No space before function parentheses
 		"wrap-iife": ["warn", "inside"], // Parentheses after IIFEs
 
@@ -38,6 +37,7 @@
 		"@typescript-eslint/promise-function-async": ["warn"],
 		"no-empty": ["warn"],
 		"no-shadow": ["warn"],
+		"sort-keys": ["warn"],
 
 		// Disabled
 		"@typescript-eslint/explicit-function-return-type": "off",
@@ -56,6 +56,7 @@
 		"max-statements": "off",
 		"multiline-comment-style": "off",
 		"multiline-ternary": "off",
+		"newline-per-chained-call": "off",
 		"no-console": "off",
 		"no-inner-declarations": "off",
 		"no-invalid-this": "off",
