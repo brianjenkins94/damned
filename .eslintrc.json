@@ -1,8 +1,9 @@
 {
 	"env": {
+		"browser": true,
 		"es6": true,
 		"node": true
-    },
+	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"project": "./tsconfig.json"
@@ -20,34 +21,58 @@
 	],
 	"rules": {
 		// Configured
-		"@typescript-eslint/indent": ["error", "tab"], // Indent using tabs
-		"array-element-newline": ["error", "consistent"], // Per-array consistent formatting
-		"func-style": ["error", "declaration"], // Declaration over expression
-		"no-tabs": ["error", { "allowIndentationTabs": true }], // No tabs, excluding indentation
-		"object-curly-spacing": ["error", "always", { "arraysInObjects": false }], // Objects should always be padded with spaces
-		"object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }], // Per-object consistent formatting
-		"space-before-function-paren": ["error", "never"], // No space before function parentheses
-		"wrap-iife": ["error", "inside"], // Parentheses after IIFEs
+		"@typescript-eslint/indent": ["warn", "tab"], // Indent using tabs
+		"array-element-newline": ["warn", "consistent"], // Per-array consistent formatting
+		"func-style": ["warn", "declaration"], // Declaration over expression
+		"no-plusplus": ["error", { "allowForLoopAfterthoughts": true }], // Disallow increment/decrement (except for in `for` loops)
+		"no-tabs": ["warn", { "allowIndentationTabs": true }], // No tabs, excluding indentation
+		"object-curly-spacing": ["warn", "always", { "arraysInObjects": false }], // Objects should always be padded with spaces
+		"object-property-newline": ["warn", { "allowAllPropertiesOnSameLine": true }], // Per-object consistent formatting
+		"sort-keys": ["warn", "asc", { "minKeys": 0 }], // Sort keys
+		"space-before-function-paren": ["warn", "never"], // No space before function parentheses
+		"wrap-iife": ["warn", "inside"], // Parentheses after IIFEs
+
+		// Warn
+		"@typescript-eslint/no-extra-parens": ["warn"],
+		"@typescript-eslint/no-unused-vars": ["warn"],
+		"@typescript-eslint/promise-function-async": ["warn"],
+		"no-empty": ["warn"],
+		"no-shadow": ["warn"],
 
 		// Disabled
+		"@typescript-eslint/explicit-function-return-type": "off",
 		"@typescript-eslint/no-magic-numbers": "off",
+		"@typescript-eslint/restrict-plus-operands": "off",
+		"capitalized-comments": "off",
+		"class-methods-use-this": "off",
 		"dot-notation": "off",
 		"func-names": "off",
+		"id-length": "off",
+		"init-declarations": "off",
+		"lines-between-class-members": "off",
+		"max-classes-per-file": "off",
 		"max-len": "off",
 		"max-lines": "off",
 		"max-statements": "off",
 		"multiline-comment-style": "off",
+		"multiline-ternary": "off",
 		"no-console": "off",
 		"no-inner-declarations": "off",
+		"no-invalid-this": "off",
 		"no-process-exit": "off",
 		"no-sync": "off",
+		"no-ternary": "off",
 		"no-undefined": "off",
+		"no-warning-comments": "off",
+		"object-shorthand": "off",
 		"one-var": "off",
 		"padded-blocks": "off",
 		"prefer-arrow-callback": "off",
 		"prefer-named-capture-group": "off",
 		"prefer-template": "off",
 		"require-unicode-regexp": "off",
+		"sort-imports": "off",
+		"spaced-comment": "off",
 		"wrap-regex": "off"
 	}
 }

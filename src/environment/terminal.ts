@@ -11,8 +11,8 @@ declare module "tty" {
 }
 
 class Terminal extends EventEmitter {
-	private input = process.stdin as tty.ReadStream;
-	private output = process.stdout as tty.WriteStream;
+	private readonly input = process.stdin as tty.ReadStream;
+	private readonly output = process.stdout as tty.WriteStream;
 
 	public rows = this.output.rows;
 	public columns = this.output.columns;

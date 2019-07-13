@@ -8,11 +8,11 @@ import { Window } from "../widgets/window";
 import { Box } from "../widgets/box";
 
 class Program extends UnstyledContainerNode {
-	private buffer = buffer;
-	private options = {
+	private readonly buffer = buffer;
+	private readonly options = {
 		"useAlternateBuffer": true
 	};
-	private widgets = {};
+	private readonly widgets = {};
 
 	// Initialization
 

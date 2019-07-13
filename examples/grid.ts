@@ -1,6 +1,6 @@
 import { Damned } from "../src";
 
-let damned = new Damned();
+const damned = new Damned();
 
 // Register events
 damned.on("C-c", function(event) {
@@ -10,7 +10,7 @@ damned.on("C-c", function(event) {
 });
 
 // Initialize a new Window
-let window = damned.append(damned.create("window", {
+const window = damned.append(damned.create("window", {
 	"title": " Grid ",
 	"margin": {
 		"top": 4,

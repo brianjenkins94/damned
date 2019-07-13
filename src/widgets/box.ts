@@ -3,7 +3,7 @@ import { ContainerNode } from "./abstract/containerNode";
 import { merge } from "../utilities";
 
 class Box extends ContainerNode {
-	private buffer;
+	private readonly buffer;
 
 	public constructor(buffer, overrides?) {
 		super();

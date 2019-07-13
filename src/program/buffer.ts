@@ -93,7 +93,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 
 	public write(text = "") {
 		// TODO: Optimize
-		for (let x = 0; x < text.length; x++ , this.cursor.x += 1) {
+		for (let x = 0; x < text.length; this.cursor.x += 1, x++) {
 			if (this.cursor.x === this.columns) {
 				this.cursorTo(this.cursor.y += 1, 0);
 			}
@@ -110,6 +110,6 @@ class Buffer extends MonkeyPatchedEventEmitter {
 	}
 }
 
-let buffer = new Buffer();
+const buffer = new Buffer();
 
 export { buffer };

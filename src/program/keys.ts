@@ -1,3 +1,4 @@
+// eslint-disable-next-line complexity
 export function emitKeys(buffer, ch = "", key) {
 	if (ch.toLowerCase() === "return") {
 		buffer.emit("keypress", "return", key);
@@ -34,6 +35,7 @@ export function emitKeys(buffer, ch = "", key) {
 	} else if (ch.toLowerCase() === "pagedown") {
 		buffer.emit("keypress", "pagedown", key);
 	} else {
+		// eslint-disable-next-line no-lonely-if
 		if (key["ctrl"] === true) {
 			buffer.emit("keypress", "C-" + key.name, key);
 		} else if (key["meta"] === true) {

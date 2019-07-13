@@ -3,7 +3,7 @@ import { ContainerNode } from "./abstract/containerNode";
 import { merge } from "../utilities";
 
 class Window extends ContainerNode {
-	private buffer;
+	private readonly buffer;
 
 	// Initialization
 
@@ -18,8 +18,8 @@ class Window extends ContainerNode {
 	// Draw
 
 	public draw() {
-		let { buffer } = this;
-		let { title, margin, border } = this.options;
+		const { buffer } = this;
+		const { title, margin, border } = this.options;
 
 		if (border !== undefined && border.style !== undefined) {
 			buffer.cursorTo(margin.left, margin.top);

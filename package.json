@@ -22,9 +22,9 @@
   "homepage": "https://github.com/brianjenkins94/damned#readme",
   "devDependencies": {
     "@types/node": "latest",
-    "@typescript-eslint/eslint-plugin": "^1.12.0",
-    "@typescript-eslint/parser": "^1.12.0",
-    "eslint": "^6.0.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
     "rollup": "latest",
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-node-builtins": "latest",
