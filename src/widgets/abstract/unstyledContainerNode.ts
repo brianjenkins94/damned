@@ -7,7 +7,6 @@ class MonkeyPatchedEventEmitter extends EventEmitter {
 	}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 abstract class UnstyledContainerNode extends MonkeyPatchedEventEmitter {
 	protected children = [];
 

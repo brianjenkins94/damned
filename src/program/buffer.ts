@@ -11,7 +11,6 @@ class MonkeyPatchedEventEmitter extends EventEmitter {
 	}
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class Buffer extends MonkeyPatchedEventEmitter {
 	public rows = terminal.rows;
 	public columns = terminal.columns;
@@ -32,7 +31,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 		});
 
 		terminal.on("resize", () => {
-			this.rows =  terminal.rows;
+			this.rows = terminal.rows;
 			this.columns = terminal.columns;
 
 			this.buffer = new Array(this.rows).fill(" ").map(() => new Array(this.columns).fill(" "));
@@ -94,7 +93,7 @@ class Buffer extends MonkeyPatchedEventEmitter {
 
 	public write(text = "") {
 		// TODO: Optimize
-		for (let x = 0; x < text.length; x++, this.cursor.x += 1) {
+		for (let x = 0; x < text.length; x++ , this.cursor.x += 1) {
 			if (this.cursor.x === this.columns) {
 				this.cursorTo(this.cursor.y += 1, 0);
 			}

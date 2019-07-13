@@ -18,7 +18,6 @@ class Window extends ContainerNode {
 	// Draw
 
 	public draw() {
-		// tslint:disable-next-line:no-this-assignment
 		let { buffer } = this;
 		let { title, margin, border } = this.options;
 

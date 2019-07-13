@@ -27,10 +27,7 @@ export default {
 		}),
 		nodeBuiltins(),
 		nodeGlobals(),
-		typescript({
-			"target": "ESNext",
-			"sourceMap": false
-		})
+		typescript()
 	],
 	"watch": {
 		"clearScreen": false

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "An ungodly resurrection of chjj's blessed.",
   "scripts": {
-    "start": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"target\\\":\\\"ESNext\\\"} ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "build": "rollup --config --watch",
     "csscomb": "csscomb --config docs/css/.csscomb.json docs/css/style.scss docs/css/partials/*.scss",
     "sassc": "sass --watch docs/css/style.scss:docs/css/style.min.css --no-cache --sourcemap=none --style=compressed",
@@ -22,6 +22,9 @@
   "homepage": "https://github.com/brianjenkins94/damned#readme",
   "devDependencies": {
     "@types/node": "latest",
+    "@typescript-eslint/eslint-plugin": "^1.12.0",
+    "@typescript-eslint/parser": "^1.12.0",
+    "eslint": "^6.0.1",
     "rollup": "latest",
     "rollup-plugin-commonjs": "latest",
     "rollup-plugin-node-builtins": "latest",
@@ -34,7 +37,6 @@
   },
   "dependencies": {
     "ansi-escapes": "latest",
-    "cross-env": "latest",
     "xterm": "latest"
   }
 }

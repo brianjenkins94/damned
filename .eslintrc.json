@@ -1,0 +1,53 @@
+{
+	"env": {
+		"es6": true,
+		"node": true
+    },
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json"
+	},
+	"plugins": ["@typescript-eslint"],
+	"extends": [
+		// Baseline ruleset
+		"eslint:all",
+
+		// Disable rules that are incompatible with or better handled by TypeScript
+		"plugin:@typescript-eslint/eslint-recommended",
+
+		// Turn on TypeScript-specific rules
+		"plugin:@typescript-eslint/all"
+	],
+	"rules": {
+		// Configured
+		"@typescript-eslint/indent": ["error", "tab"], // Indent using tabs
+		"array-element-newline": ["error", "consistent"], // Per-array consistent formatting
+		"func-style": ["error", "declaration"], // Declaration over expression
+		"no-tabs": ["error", { "allowIndentationTabs": true }], // No tabs, excluding indentation
+		"object-curly-spacing": ["error", "always", { "arraysInObjects": false }], // Objects should always be padded with spaces
+		"object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }], // Per-object consistent formatting
+		"space-before-function-paren": ["error", "never"], // No space before function parentheses
+		"wrap-iife": ["error", "inside"], // Parentheses after IIFEs
+
+		// Disabled
+		"@typescript-eslint/no-magic-numbers": "off",
+		"dot-notation": "off",
+		"func-names": "off",
+		"max-len": "off",
+		"max-lines": "off",
+		"max-statements": "off",
+		"multiline-comment-style": "off",
+		"no-console": "off",
+		"no-inner-declarations": "off",
+		"no-process-exit": "off",
+		"no-sync": "off",
+		"no-undefined": "off",
+		"one-var": "off",
+		"padded-blocks": "off",
+		"prefer-arrow-callback": "off",
+		"prefer-named-capture-group": "off",
+		"prefer-template": "off",
+		"require-unicode-regexp": "off",
+		"wrap-regex": "off"
+	}
+}

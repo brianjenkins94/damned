@@ -1,4 +1,3 @@
-// tslint:disable-next-line:cyclomatic-complexity
 export function emitKeys(buffer, ch = "", key) {
 	if (ch.toLowerCase() === "return") {
 		buffer.emit("keypress", "return", key);
