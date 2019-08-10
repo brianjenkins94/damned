@@ -57,7 +57,6 @@ class UnstyledContainerNode extends EventEmitter {
         return element;
     }
 }
-//# sourceMappingURL=unstyledContainerNode.js.map
 
 var global$1 = (typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
@@ -490,12 +489,10 @@ class Browser extends EventEmitter {
         xtermJs.write(text);
     }
 }
-//# sourceMappingURL=browser.js.map
 
 // This is pretty terrible, but I can't find a better way to do it.
 const Environment = typeof (process) !== "undefined" ? require("./terminal").Terminal : Browser;
 const terminal = new Environment();
-//# sourceMappingURL=index.js.map
 
 // eslint-disable-next-line complexity
 function emitKeys(buffer, ch = "", key) {
@@ -563,7 +560,6 @@ function emitKeys(buffer, ch = "", key) {
         }
     }
 }
-//# sourceMappingURL=keys.js.map
 
 class Buffer extends EventEmitter {
     // Initialization
@@ -644,7 +640,6 @@ class Buffer extends EventEmitter {
     }
 }
 const buffer = new Buffer();
-//# sourceMappingURL=buffer.js.map
 
 function merge(source, target) {
     if (target === undefined) {
@@ -657,7 +652,6 @@ function merge(source, target) {
     });
     return target;
 }
-//# sourceMappingURL=utilities.js.map
 
 class Node extends EventEmitter {
     constructor() {
@@ -707,7 +701,6 @@ class Node extends EventEmitter {
         };
     }
 }
-//# sourceMappingURL=node.js.map
 
 class ContainerNode extends Node {
     constructor() {
@@ -725,7 +718,6 @@ class ContainerNode extends Node {
         return element;
     }
 }
-//# sourceMappingURL=containerNode.js.map
 
 class Window extends ContainerNode {
     // Initialization
@@ -770,7 +762,6 @@ class Window extends ContainerNode {
         }
     }
 }
-//# sourceMappingURL=window.js.map
 
 class Box extends ContainerNode {
     constructor(buffer, overrides) {
@@ -782,7 +773,6 @@ class Box extends ContainerNode {
         console.error("Not yet implemented.");
     }
 }
-//# sourceMappingURL=box.js.map
 
 class Program extends UnstyledContainerNode {
     // Initialization
@@ -824,7 +814,6 @@ class Program extends UnstyledContainerNode {
         this.buffer.flush();
     }
 }
-//# sourceMappingURL=index.js.map
 
 const damned = new Program();
 // Register events
@@ -868,4 +857,3 @@ const window$1 = damned.append(damned.create("window", {
     }
 }));
 damned.refresh();
-//# sourceMappingURL=grid.js.map

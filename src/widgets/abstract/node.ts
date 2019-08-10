@@ -1,4 +1,4 @@
-import { EventEmitter } from "./eventEmitter";
+import { EventEmitter } from "../../program/abstract/eventEmitter";
 
 abstract class Node extends EventEmitter {
 	protected options = {

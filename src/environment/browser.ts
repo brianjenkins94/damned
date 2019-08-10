@@ -1,7 +1,7 @@
 // WORKAROUND: Couldn't get `xterm` to resolve its type definitions correctly.
 declare let xtermJs;
 
-import { EventEmitter } from "../widgets/abstract/eventEmitter";
+import { EventEmitter } from "../program/abstract/eventEmitter";
 
 import * as ansiEscapes from "ansi-escapes";
 

@@ -1,4 +1,4 @@
-import { EventEmitter } from "../widgets/abstract/eventEmitter";
+import { EventEmitter } from "./abstract/eventEmitter";
 
 import { terminal } from "../environment";
 import { emitKeys } from "./keys";
