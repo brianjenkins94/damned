@@ -37,13 +37,13 @@
 		// Warn
 		"@typescript-eslint/no-extra-parens": ["warn"],
 		"@typescript-eslint/no-unused-vars": ["warn"],
-		"@typescript-eslint/promise-function-async": ["warn"],
 		"no-empty": ["warn"],
 		"no-shadow": ["warn"],
 		"sort-keys": ["warn"],
 
 		// Disabled
 		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/no-floating-promises": "off",
 		"@typescript-eslint/no-magic-numbers": "off",
 		"@typescript-eslint/promise-function-async": "off",
 		"@typescript-eslint/restrict-plus-operands": "off",
