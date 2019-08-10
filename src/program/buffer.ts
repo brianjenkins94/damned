@@ -1,17 +1,9 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "../widgets/abstract/eventEmitter";
 
 import { terminal } from "../environment";
 import { emitKeys } from "./keys";
 
-class MonkeyPatchedEventEmitter extends EventEmitter {
-	public emit(type, ...args): any {
-		if (type !== "resize") {
-			super.emit("*", ...args);
-		}
-	}
-}
-
-class Buffer extends MonkeyPatchedEventEmitter {
+class Buffer extends EventEmitter {
 	public rows = terminal.rows;
 	public columns = terminal.columns;
 

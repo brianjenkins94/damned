@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "../widgets/abstract/eventEmitter";
 
 import * as readline from "readline";
 import * as tty from "tty";

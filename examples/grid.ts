@@ -9,6 +9,10 @@ damned.on("C-c", function(event) {
 	process.exit(0);
 });
 
+damned.on("*", function(event) {
+	console.log(event);
+});
+
 // Initialize a new Window
 const window = damned.append(damned.create("window", {
 	"title": " Grid ",

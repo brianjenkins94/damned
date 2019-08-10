@@ -1,13 +1,6 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "./eventEmitter";
 
-class MonkeyPatchedEventEmitter extends EventEmitter {
-	public emit(type, ...args): any {
-		super.emit("*", ...args);
-		super.emit(type, ...args);
-	}
-}
-
-abstract class UnstyledContainerNode extends MonkeyPatchedEventEmitter {
+abstract class UnstyledContainerNode extends EventEmitter {
 	protected children = [];
 
 	public refresh() {
