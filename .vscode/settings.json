@@ -7,8 +7,8 @@
 	},
 	"editor.formatOnSave": false,
 	"eslint.validate": [
-		"javascript",
-		"typescript"
+		{ "language": "javascript", "autoFix": true },
+		{ "language": "typescript", "autoFix": true }
 	],
 	"files.insertFinalNewline": true,
 	"files.trimTrailingWhitespace": true,
