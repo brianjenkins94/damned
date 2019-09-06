@@ -22,12 +22,14 @@
 	"rules": {
 		// Configured
 		"@typescript-eslint/indent": ["warn", "tab"], // Indent using tabs
+		"@typescript-eslint/no-misused-promises": ["warn", { "checksVoidReturn": false }], // No promises in conditionals
 		"array-bracket-newline": ["warn", "consistent"], // Per-array consistent formatting
 		"array-element-newline": ["warn", "consistent"], // Per-array consistent formatting
 		"dot-location": ["warn", "property"], // Dot on the next line for chained functions
 		"func-style": ["warn", "declaration"], // Declaration over expression
-		"no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 1, "maxBOF": 0 }], // Disallow multiple consecutive lines
-		"no-plusplus": ["warn", { "allowForLoopAfterthoughts": true }], // Disallow increment/decrement (except for in `for` loops)
+		"function-call-argument-newline": ["warn", "never"], // No line breaks between arguments
+		"no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 1, "maxBOF": 0 }], // No multiple consecutive lines
+		"no-plusplus": ["warn", { "allowForLoopAfterthoughts": true }], // No increment/decrement operator (except for in `for` loops)
 		"no-tabs": ["warn", { "allowIndentationTabs": true }], // No tabs, excluding indentation
 		"object-curly-spacing": ["warn", "always", { "arraysInObjects": false }], // Objects should always be padded with spaces
 		"object-property-newline": ["warn", { "allowAllPropertiesOnSameLine": true }], // Per-object consistent formatting
@@ -50,7 +52,7 @@
 		"@typescript-eslint/promise-function-async": "off",
 		"@typescript-eslint/require-array-sort-compare": "off",
 		"@typescript-eslint/restrict-plus-operands": "off",
-		"@typescript/typedef": "off",
+		"@typescript-eslint/typedef": "off",
 		"capitalized-comments": "off",
 		"class-methods-use-this": "off",
 		"dot-notation": "off",
