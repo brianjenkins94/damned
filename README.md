@@ -20,7 +20,6 @@
 						<li><a href="#installation">Installation</a></li>
 						<li><a href="#usage">Usage</a></li>
 					</ol>
-					<li><a href="#file-structure">File Structure</a></li>
 					<li><a href="#acknowledgements">Acknowledgements</a></li>
 					<li><a href="#license">License</a></li>
 				</ol>
@@ -36,8 +35,6 @@
 #### Installation
 
 #### Usage
-
-### File Structure
 
 ### Acknowledgements
 
