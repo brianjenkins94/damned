@@ -5,27 +5,27 @@
 > An ungodly resurrection of chjj's blessed.
 
 <table>
-	<thead>
-		<tr>
-			<th align="center"><strong>Contents</strong></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<ol>
-					<li><a href="#getting-started">Getting Started</a></li>
-					<ol>
-						<li><a href="#prerequisites">Prerequisites</a></li>
-						<li><a href="#installation">Installation</a></li>
-						<li><a href="#usage">Usage</a></li>
-					</ol>
-					<li><a href="#acknowledgements">Acknowledgements</a></li>
-					<li><a href="#license">License</a></li>
-				</ol>
-			</td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr>
+            <th align="center"><strong>Contents</strong></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <ol>
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <ol>
+                        <li><a href="#prerequisites">Prerequisites</a></li>
+                        <li><a href="#installation">Installation</a></li>
+                        <li><a href="#usage">Usage</a></li>
+                    </ol>
+                    <li><a href="#acknowledgements">Acknowledgements</a></li>
+                    <li><a href="#license">License</a></li>
+                </ol>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 ### Getting Started
