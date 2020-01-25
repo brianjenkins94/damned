@@ -6,14 +6,13 @@
 		"editor.formatOnSave": true
 	},
 	"editor.formatOnSave": false,
-	"eslint.validate": [
-		{ "language": "javascript", "autoFix": true },
-		{ "language": "typescript", "autoFix": true }
-	],
 	"files.insertFinalNewline": true,
 	"files.trimTrailingWhitespace": true,
 	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
 	"javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+	"remark.format.rules": {
+		"fences": true
+	},
 	"typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
 	"typescript.format.insertSpaceBeforeFunctionParenthesis": false
 }
